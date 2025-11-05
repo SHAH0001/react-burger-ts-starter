@@ -1,5 +1,7 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 
+import { BurgerIngredient } from './burger-ingredient/burger-ingredient';
+
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
@@ -11,7 +13,7 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  console.log(ingredients);
+  console.log('BurgerIngredients: ', ingredients);
 
   return (
     <section className={styles.burger_ingredients}>
@@ -46,6 +48,11 @@ export const BurgerIngredients = ({
           </Tab>
         </ul>
       </nav>
+      <div className={styles.ingredients}>
+        {ingredients.map((ingredient) => (
+          <BurgerIngredient key={ingredient._id} ingredient={ingredient} />
+        ))}
+      </div>
     </section>
   );
 };

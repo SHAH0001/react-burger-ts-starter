@@ -13,3 +13,9 @@
   text-align: center;
   list-style-type: none;
 }
+
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
+}
