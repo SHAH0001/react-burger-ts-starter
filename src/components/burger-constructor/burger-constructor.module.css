@@ -29,3 +29,13 @@
 .container {
   overflow-y: auto;
 }
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+.place_order {
+  display: flex;
+  justify-content: end;
+}
