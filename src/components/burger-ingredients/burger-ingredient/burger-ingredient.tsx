@@ -16,7 +16,7 @@ export const BurgerIngredient = ({
       <img src={ingredient.image} alt={ingredient.name} />
       <div className={styles.price}>
         {ingredient.price}
-        <CurrencyIcon type="primary" />
+        <CurrencyIcon type="primary" className="ml-1" />
       </div>
       <div className={styles.name}>{ingredient.name}</div>
     </div>

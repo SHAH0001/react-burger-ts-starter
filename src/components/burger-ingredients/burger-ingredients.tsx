@@ -1,5 +1,4 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-// import { useEffect, useState } from 'react';
 
 import { BurgerIngredient } from './burger-ingredient/burger-ingredient';
 
@@ -14,8 +13,6 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
-  console.log('BurgerIngredients: ', ingredients);
-
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
