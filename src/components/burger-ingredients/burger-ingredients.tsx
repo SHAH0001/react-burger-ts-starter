@@ -14,8 +14,12 @@ export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
-  const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
-  const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
+  // const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
+  // const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
+
+  const handleChildData = (id: TIngredient['_id']): void => {
+    console.log('id: ', id);
+  };
 
   return (
     <section className={styles.burger_ingredients}>
@@ -54,10 +58,14 @@ export const BurgerIngredients = ({
         <div className="text text_type_main-medium mt-10">Булки</div>
         <div className={styles.ingredients}>
           {buns.map((bun) => (
-            <BurgerIngredient key={bun._id} ingredient={bun} />
+            <BurgerIngredient
+              onDataSubmit={handleChildData}
+              key={bun._id}
+              ingredient={bun}
+            />
           ))}
         </div>
-        <div className="text text_type_main-medium">Начинки</div>
+        {/* <div className="text text_type_main-medium">Начинки</div>
         <div className={styles.ingredients}>
           {fillings.map((filling) => (
             <BurgerIngredient key={filling._id} ingredient={filling} />
@@ -68,7 +76,7 @@ export const BurgerIngredients = ({
           {sauces.map((sauce) => (
             <BurgerIngredient key={sauce._id} ingredient={sauce} />
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );
