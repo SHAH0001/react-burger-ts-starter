@@ -22,3 +22,17 @@
 .container {
   overflow-x: auto;
 }
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nutritional_value {
+  display: flex;
+}
+
+.energy_value {
+  text-align: center;
+}

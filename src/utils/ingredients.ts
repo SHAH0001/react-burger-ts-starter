@@ -5,10 +5,10 @@ export const ingredients: TIngredient[] = [
     _id: '60666c42cc7b410027a1a9b1',
     name: 'Краторная булка N-200i',
     type: 'bun',
-    proteins: 80,
-    fat: 24,
-    carbohydrates: 53,
-    calories: 420,
+    proteins: 80, //белки
+    fat: 24, //жиры
+    carbohydrates: 53, //углеводы
+    calories: 420, //калории
     price: 1255,
     image: 'https://code.s3.yandex.net/react/code/bun-02.png',
     image_mobile: 'https://code.s3.yandex.net/react/code/bun-02-mobile.png',
