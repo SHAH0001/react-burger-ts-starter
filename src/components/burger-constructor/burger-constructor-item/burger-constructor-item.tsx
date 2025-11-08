@@ -23,7 +23,7 @@ export const BurgerConstructorItem = ({
         <div className={`${styles.burger_constructor_name} text text_type_main-small`}>
           {ingredient.name}
         </div>
-        <div className="mr-1">{ingredient.price}</div>
+        <div className="text text_type_main-small mr-1">{ingredient.price}</div>
         <CurrencyIcon type="primary" className="mr-5" />
         <DeleteIcon type="primary" />
       </div>

@@ -22,9 +22,9 @@ export const BurgerConstructor = ({
 
   return (
     <section className={styles.burger_constructor}>
-      <div className={`${styles.bun_top} mb-4`}>
+      <div className={`${styles.bun_top} mb-4 text text_type_main-small`}>
         <img src={getFirstBun?.image_mobile} alt={getFirstBun?.name} />
-        <div className="text text_type_main-small mr-5">{getFirstBun?.name} (верх)</div>
+        <div className="mr-5">{getFirstBun?.name} (верх)</div>
         <div className="mr-1">{getFirstBun?.price}</div>
         <CurrencyIcon type="primary" className="mr-5" />
         <LockIcon type="secondary" />
@@ -34,9 +34,9 @@ export const BurgerConstructor = ({
           <BurgerConstructorItem key={ingredient._id} ingredient={ingredient} />
         ))}
       </div>
-      <div className={`${styles.bun_bottom} mt-4`}>
+      <div className={`${styles.bun_bottom} mt-4 text text_type_main-small`}>
         <img src={getFirstBun?.image_mobile} alt={getFirstBun?.name} />
-        <div className="text text_type_main-small mr-5">{getFirstBun?.name} (низ)</div>
+        <div className="mr-5">{getFirstBun?.name} (низ)</div>
         <div className="mr-1">{getFirstBun?.price}</div>
         <CurrencyIcon type="primary" className="mr-5" />
         <LockIcon type="secondary" />
