@@ -16,14 +16,14 @@ export const BurgerConstructorItem = ({
   ingredient,
 }: TBurgerConstructorItemProps): React.JSX.Element => {
   return (
-    <div className={`${styles.burger_constructor_wrapper} mb-4`}>
+    <div
+      className={`${styles.burger_constructor_wrapper} mb-4 text text_type_main-small`}
+    >
       <DragIcon type="primary" />
       <div className={styles.burger_constructor_item}>
         <img src={ingredient.image_mobile} alt={ingredient.name} />
-        <div className={`${styles.burger_constructor_name} text text_type_main-small`}>
-          {ingredient.name}
-        </div>
-        <div className="text text_type_main-small mr-1">{ingredient.price}</div>
+        <div className={styles.burger_constructor_name}>{ingredient.name}</div>
+        <div className=" mr-1">{ingredient.price}</div>
         <CurrencyIcon type="primary" className="mr-5" />
         <DeleteIcon type="primary" />
       </div>
