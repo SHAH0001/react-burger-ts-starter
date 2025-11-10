@@ -5,6 +5,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
+import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
 import { BurgerConstructorItem } from './burger-constructor-item/burger-constructor-item';
 
@@ -69,7 +70,11 @@ export const BurgerConstructor = ({
           </Button>
         </div>
       </section>
-      {isModalOpen && <OrderDetails onclose={onclose} />}
+      {isModalOpen && (
+        <Modal onclose={onclose}>
+          <OrderDetails />
+        </Modal>
+      )}
     </>
   );
 };

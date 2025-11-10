@@ -2,6 +2,7 @@ import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
+import { Modal } from '../modal/modal';
 import { BurgerIngredient } from './burger-ingredient/burger-ingredient';
 
 import type { TIngredient } from '@utils/types';
@@ -104,7 +105,9 @@ export const BurgerIngredients = ({
         </div>
       </section>
       {isModalOpen && selectIngredient && (
-        <IngredientDetails onclose={onclose} selectIngredient={selectIngredient} />
+        <Modal title={'Детали ингредиента'} onclose={onclose}>
+          <IngredientDetails selectIngredient={selectIngredient} />
+        </Modal>
       )}
     </>
   );
