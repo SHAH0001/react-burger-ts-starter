@@ -14,7 +14,12 @@ export const App = (): React.JSX.Element => {
 
   useEffect(() => {
     void fetch(`${serverUrl}ingredients`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(new Error(`Ошибка ${response.status}`));
+      })
       .then((response) => setIngredients(response.data))
       .catch((error) => console.error(error));
   }, []);
