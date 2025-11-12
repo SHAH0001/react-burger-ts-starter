@@ -1,0 +1,20 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 16px;
+  background-color: #1C1C21;
+  min-width: 720px;
+  z-index: 2;
+}
+
+.close_icon {
+  cursor: pointer;
+}
+
+.modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

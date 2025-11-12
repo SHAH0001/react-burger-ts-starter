@@ -1,0 +1,18 @@
+.burger_constructor_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 50px;
+  background-color: #1C1C21;
+  padding-right: 32px;
+}
+
+.burger_constructor_name {
+  max-width: 254px;
+}
+
+.burger_constructor_wrapper {
+  display: flex;
+  align-items: center;
+}
