@@ -23,6 +23,8 @@ export const BurgerIngredients = ({
   const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
   const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
 
+  console.log('ingredients111: ', ingredients);
+
   const getIngredientId = (id: TIngredient['_id']): void => {
     const findIngredient = ingredients.find((ingredient) => ingredient._id === id);
     if (!findIngredient) {

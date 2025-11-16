@@ -1,14 +1,17 @@
-import { GET_INGREDIENTS } from './actions';
+import {
+  GET_INGREDIENTS,
+  TASKS_ERROR,
+  // TASKS_LOAD_SUCCESS,
+  // TASKS_LOADING,
+} from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: {
   ingredients: TIngredient[];
-  test: string;
 } = {
   ingredients: [],
-  test: 'hello',
 };
 
 export const ingredientsReducer = (
@@ -18,7 +21,15 @@ export const ingredientsReducer = (
 ) => {
   switch (action.type) {
     case GET_INGREDIENTS:
-      return { ...state, ingredients: [state, action.payload] };
+      console.log('state: ', state);
+      console.log('action.payload: ', action.payload);
+      return { ...state, ingredients: action.payload };
+    // case TASKS_LOAD_SUCCESS:
+    //   return { ...state, tasks: action.payload, loading: false };
+    // case TASKS_LOADING:
+    //   return { ...state, loading: true, error: null };
+    case TASKS_ERROR:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }
