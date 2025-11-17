@@ -4,20 +4,16 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { AppHeader } from '@components/app-header/app-header';
-// import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
+import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 
-// import type { RootState } from '@reduxjs/toolkit/query';
 import type { RootState } from '../../services/store';
 import type { TIngredient } from '@/utils/types';
 
-// import { serverUrl } from '../../utils/serverUrl';
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
-
-  // const [ingredients, setIngredients] = useState([]);
 
   const ingredients = useSelector<RootState, TIngredient[]>(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,15 +25,6 @@ export const App = (): React.JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     dispatch(loadingIngredients());
-    // void fetch(`${serverUrl}ingredients`)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     }
-    //     return Promise.reject(new Error(`Ошибка ${response.status}`));
-    //   })
-    //   .then((response) => setIngredients(response.data))
-    //   .catch((error) => console.error(error));
   }, []);
 
   if (ingredients.length === 0) {
@@ -51,7 +38,7 @@ export const App = (): React.JSX.Element => {
         </h1>
         <main className={`${styles.main} pl-5 pr-5`}>
           <BurgerIngredients ingredients={ingredients} />
-          {/* <BurgerConstructor ingredients={ingredients} /> */}
+          <BurgerConstructor ingredients={ingredients} />
         </main>
       </div>
     );

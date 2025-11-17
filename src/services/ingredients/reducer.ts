@@ -21,8 +21,6 @@ export const ingredientsReducer = (
 ) => {
   switch (action.type) {
     case GET_INGREDIENTS:
-      console.log('state: ', state);
-      console.log('action.payload: ', action.payload);
       return { ...state, ingredients: action.payload };
     // case TASKS_LOAD_SUCCESS:
     //   return { ...state, tasks: action.payload, loading: false };
