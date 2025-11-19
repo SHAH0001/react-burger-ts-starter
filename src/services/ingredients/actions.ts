@@ -11,9 +11,6 @@ export const SET_COUNT_BUN = 'SET_COUNT_BUN';
 export const loadingIngredients =
   () =>
   async (dispatch: Dispatch): Promise<void> => {
-    dispatch({
-      type: TASKS_LOADING,
-    });
     return fetch(`${serverUrl}ingredients`)
       .then((response) => {
         if (response.ok) {
@@ -41,7 +38,12 @@ export const loadingIngredients =
       });
   };
 
-export const setCountBun = (id: TIngredient['_id']) => ({
+export const setCountBun = (
+  id: TIngredient['_id']
+): {
+  type: string;
+  payload: TIngredient['_id'];
+} => ({
   type: SET_COUNT_BUN,
   payload: id,
 });

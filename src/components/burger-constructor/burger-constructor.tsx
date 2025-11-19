@@ -1,4 +1,4 @@
-import { setBun } from '@/services/constructor/actions';
+import { addIngredient, attachBun } from '@/services/burgerConstructor/actions';
 import { setCountBun } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
@@ -11,30 +11,33 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
-import { BurgerConstructorItem } from './burger-constructor-item/burger-constructor-item';
 
 import type { RootState } from '../../services/store';
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-constructor.module.css';
 
-type TBurgerConstructorProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerConstructor = ({
-  ingredients,
-}: TBurgerConstructorProps): React.JSX.Element => {
+export const BurgerConstructor = (): React.JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const bun = useSelector<RootState, TIngredient>(
-    (state): TIngredient => state.constructor.bun as TIngredient
+    (state): TIngredient => state.burgerConstructor.bun as TIngredient
   );
+
+  const [{ isOverMiddle }, dropRefEmptyFilling] = useDrop(() => ({
+    accept: 'ingredient',
+    drop(ingredient: TIngredient): void {
+      dispatch(addIngredient(ingredient));
+    },
+    collect: (monitor) => ({
+      isOverMiddle: monitor.isOver(),
+    }),
+  }));
 
   const [{ isOverUp }, dropRefEmptyUpBun] = useDrop(() => ({
     accept: 'bun',
     drop(ingredient: TIngredient): void {
-      dispatch(setBun(ingredient));
+      dispatch(attachBun(ingredient));
       dispatch(setCountBun(ingredient._id));
     },
     collect: (monitor) => ({
@@ -45,7 +48,7 @@ export const BurgerConstructor = ({
   const [{ isOverDown }, dropRefEmptyDownBun] = useDrop(() => ({
     accept: 'bun',
     drop(ingredient: TIngredient): void {
-      dispatch(setBun(ingredient));
+      dispatch(attachBun(ingredient));
       dispatch(setCountBun(ingredient._id));
     },
     collect: (monitor) => ({
@@ -56,7 +59,7 @@ export const BurgerConstructor = ({
   const [, dropRefUpBun] = useDrop(() => ({
     accept: 'bun',
     drop(ingredient: TIngredient): void {
-      dispatch(setBun(ingredient));
+      dispatch(attachBun(ingredient));
       dispatch(setCountBun(ingredient._id));
     },
   }));
@@ -64,12 +67,10 @@ export const BurgerConstructor = ({
   const [, dropRefDownBun] = useDrop(() => ({
     accept: 'bun',
     drop(ingredient: TIngredient): void {
-      dispatch(setBun(ingredient));
+      dispatch(attachBun(ingredient));
       dispatch(setCountBun(ingredient._id));
     },
   }));
-
-  const ingredientsWithoutBuns = ingredients.filter((item) => item.type !== 'bun');
 
   const onclose = (): void => {
     setIsModalOpen(false);
@@ -107,9 +108,18 @@ export const BurgerConstructor = ({
           </div>
         )}
         <div className={styles.container}>
-          {ingredientsWithoutBuns.map((ingredient) => (
+          {/* {ingredientsWithoutBuns.map((ingredient) => (
             <BurgerConstructorItem key={ingredient._id} ingredient={ingredient} />
-          ))}
+          ))} */}
+          <div
+            ref={(el) => {
+              dropRefEmptyFilling(el);
+            }}
+            className={`${styles.choose_filling} text text_type_main-small`}
+            style={{ border: isOverMiddle ? '1px dashed blue' : '0px' }}
+          >
+            Выберите начинку
+          </div>
         </div>
         {bun ? (
           <div
