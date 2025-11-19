@@ -1,11 +1,12 @@
 import { serverUrl } from '@/utils/serverUrl';
 
+import type { TIngredient } from '@/utils/types';
 import type { Dispatch } from '@reduxjs/toolkit';
 
 export const GET_INGREDIENTS = 'GET_INGREDIENTS';
-export const TASKS_LOAD_SUCCESS = 'TASKS_LOAD_SUCCESS';
 export const TASKS_LOADING = 'TASKS_LOADING';
 export const TASKS_ERROR = 'TASKS_ERROR';
+export const SET_COUNT_BUN = 'SET_COUNT_BUN';
 
 export const loadingIngredients =
   () =>
@@ -21,17 +22,26 @@ export const loadingIngredients =
         return Promise.reject(new Error(`Ошибка ${response.status}`));
       })
       .then(({ data }) => {
+        const payload = data.map((item: TIngredient) => {
+          return {
+            ...item,
+            count: 0,
+          };
+        });
         dispatch({
           type: GET_INGREDIENTS,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          payload: data,
+          payload,
         });
       })
       .catch((error) => {
         dispatch({
           type: TASKS_ERROR,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           payload: error.message,
         });
       });
   };
+
+export const setCountBun = (id: TIngredient['_id']) => ({
+  type: SET_COUNT_BUN,
+  payload: id,
+});

@@ -2,10 +2,14 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 import { createStore, combineReducers, applyMiddleware } from '@reduxjs/toolkit';
 import { thunk } from 'redux-thunk';
 
+import { constructorReducer } from './constructor/reducer';
 import { ingredientsReducer } from './ingredients/reducer';
 
 import type { Store, UnknownAction } from '@reduxjs/toolkit';
-const rootReducer = combineReducers({ ingredients: ingredientsReducer });
+const rootReducer = combineReducers({
+  ingredients: ingredientsReducer,
+  constructor: constructorReducer,
+});
 
 export const configureStore = (
   initialState?: Partial<object>

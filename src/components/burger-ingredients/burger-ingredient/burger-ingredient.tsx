@@ -1,4 +1,4 @@
-import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
+import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
 
 import type { TIngredient } from '@utils/types';
@@ -30,6 +30,7 @@ export const BurgerIngredient = ({
       onClick={() => getIngredientId(ingredient._id)}
       className={`${styles.ingredient} mb-10`}
     >
+      {ingredient.count > 0 ? <Counter count={ingredient.count} size="default" /> : null}
       <img src={ingredient.image} alt={ingredient.name} />
       <div className={styles.price}>
         {ingredient.price}

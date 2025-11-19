@@ -1,9 +1,4 @@
-import {
-  GET_INGREDIENTS,
-  TASKS_ERROR,
-  // TASKS_LOAD_SUCCESS,
-  // TASKS_LOADING,
-} from './actions';
+import { GET_INGREDIENTS, TASKS_ERROR, SET_COUNT_BUN } from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -17,17 +12,40 @@ const initialState: {
 export const ingredientsReducer = (
   state = initialState,
   action: PayloadAction<string>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/explicit-module-boundary-types
 ) => {
   switch (action.type) {
     case GET_INGREDIENTS:
       return { ...state, ingredients: action.payload };
-    // case TASKS_LOAD_SUCCESS:
-    //   return { ...state, tasks: action.payload, loading: false };
-    // case TASKS_LOADING:
-    //   return { ...state, loading: true, error: null };
     case TASKS_ERROR:
       return { ...state, loading: false, error: action.payload };
+    case SET_COUNT_BUN: {
+      const TWO_BUNS = 2;
+      const index = state.ingredients.findIndex(
+        (item: TIngredient) => item._id === action.payload
+      );
+      const ingredients = state.ingredients.map((item: TIngredient) => {
+        if (item.type === 'bun') {
+          return {
+            ...item,
+            count: 0,
+          };
+        }
+        return { ...item };
+      });
+      const item = ingredients[index];
+      const updateItem: TIngredient = {
+        ...item,
+        count: TWO_BUNS,
+      };
+      return {
+        ...state,
+        ingredients: [
+          ...ingredients.slice(0, index),
+          updateItem,
+          ...ingredients.slice(index + 1),
+        ],
+      };
+    }
     default:
       return state;
   }

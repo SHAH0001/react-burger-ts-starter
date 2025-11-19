@@ -16,9 +16,7 @@ export const App = (): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const ingredients = useSelector<RootState, TIngredient[]>(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    (state): TIngredient[] => state.ingredients.ingredients
+    (state): TIngredient[] => state.ingredients.ingredients as TIngredient[]
   );
 
   useEffect(() => {

@@ -55,7 +55,3 @@
   display: flex;
   justify-content: end;
 }
-
-.dragging {
-  border: 1px dashed blue;
-}
