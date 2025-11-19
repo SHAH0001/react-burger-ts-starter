@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
@@ -27,7 +28,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const [{ isOverMiddle }, dropRefEmptyFilling] = useDrop(() => ({
     accept: 'ingredient',
     drop(ingredient: TIngredient): void {
-      dispatch(addIngredient(ingredient));
+      const constructorIngredient = {
+        ...ingredient,
+        key: uuidv4(),
+      };
+      dispatch(addIngredient(constructorIngredient));
     },
     collect: (monitor) => ({
       isOverMiddle: monitor.isOver(),

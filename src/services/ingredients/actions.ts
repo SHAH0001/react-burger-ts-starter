@@ -23,6 +23,7 @@ export const loadingIngredients =
           return {
             ...item,
             count: 0,
+            key: '',
           };
         });
         dispatch({

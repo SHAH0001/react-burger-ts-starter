@@ -19,8 +19,6 @@ export const constructorReducer = (
     case ATTACH_BUN:
       return { ...state, bun: action.payload };
     case ADD_INGREDIENT:
-      console.log('state: ', { ...state });
-      console.log('action.payload: ', action.payload);
       return {
         ...state,
         burgerConstructor: [...state.burgerConstructor, action.payload],
