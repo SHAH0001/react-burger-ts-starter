@@ -1,5 +1,5 @@
 import { addIngredient, attachBun } from '@/services/burgerConstructor/actions';
-import { setCountBun } from '@/services/ingredients/actions';
+import { addCounterIngredient, setBuns } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
   LockIcon,
@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Modal } from '../modal/modal';
 import { OrderDetails } from '../order-details/order-details';
+import { BurgerConstructorItem } from './burger-constructor-item/burger-constructor-item';
 
 import type { RootState } from '../../services/store';
 import type { TIngredient } from '@utils/types';
@@ -24,26 +25,44 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const bun = useSelector<RootState, TIngredient>(
     (state): TIngredient => state.burgerConstructor.bun as TIngredient
   );
+  console.log('переменная: ', bun);
 
-  const [{ isOverMiddle }, dropRefEmptyFilling] = useDrop(() => ({
+  const burgerConstructor = useSelector<RootState, TIngredient[]>(
+    (state): TIngredient[] => state.burgerConstructor.burgerConstructor as TIngredient[]
+  );
+
+  const ingredients = useSelector<RootState, TIngredient[]>(
+    (state): TIngredient[] => state.ingredients.ingredients as TIngredient[]
+  );
+
+  const [, dropRefBurgerConstructor] = useDrop(() => ({
     accept: 'ingredient',
     drop(ingredient: TIngredient): void {
+      console.log('метод: ', bun);
       const constructorIngredient = {
         ...ingredient,
         key: uuidv4(),
       };
       dispatch(addIngredient(constructorIngredient));
+      const localIngredients = ingredients.map((item: TIngredient) => {
+        if (item._id === constructorIngredient._id) {
+          return {
+            ...item,
+            count: (item.count += 1),
+          };
+        }
+        return item;
+      });
+      console.log('ingredients: ', ingredients);
+      dispatch(addCounterIngredient(localIngredients));
     },
-    collect: (monitor) => ({
-      isOverMiddle: monitor.isOver(),
-    }),
   }));
 
   const [{ isOverUp }, dropRefEmptyUpBun] = useDrop(() => ({
     accept: 'bun',
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
-      dispatch(setCountBun(ingredient._id));
+      dispatch(setBuns(ingredient._id));
     },
     collect: (monitor) => ({
       isOverUp: monitor.isOver(),
@@ -54,7 +73,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     accept: 'bun',
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
-      dispatch(setCountBun(ingredient._id));
+      dispatch(setBuns(ingredient._id));
     },
     collect: (monitor) => ({
       isOverDown: monitor.isOver(),
@@ -65,7 +84,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     accept: 'bun',
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
-      dispatch(setCountBun(ingredient._id));
+      dispatch(setBuns(ingredient._id));
     },
   }));
 
@@ -73,7 +92,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     accept: 'bun',
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
-      dispatch(setCountBun(ingredient._id));
+      dispatch(setBuns(ingredient._id));
     },
   }));
 
@@ -84,6 +103,19 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const placeOrder = (): void => {
     setIsModalOpen(true);
   };
+
+  let burgerConstructorItems;
+  if (burgerConstructor.length > 0) {
+    burgerConstructorItems = burgerConstructor.map((ingredient) => (
+      <BurgerConstructorItem key={ingredient.key} ingredient={ingredient} />
+    ));
+  } else {
+    burgerConstructorItems = (
+      <div className={`${styles.choose_filling} text text_type_main-small`}>
+        Выберите начинку
+      </div>
+    );
+  }
 
   return (
     <>
@@ -112,19 +144,13 @@ export const BurgerConstructor = (): React.JSX.Element => {
             Выберите булки
           </div>
         )}
-        <div className={styles.container}>
-          {/* {ingredientsWithoutBuns.map((ingredient) => (
-            <BurgerConstructorItem key={ingredient._id} ingredient={ingredient} />
-          ))} */}
-          <div
-            ref={(el) => {
-              dropRefEmptyFilling(el);
-            }}
-            className={`${styles.choose_filling} text text_type_main-small`}
-            style={{ border: isOverMiddle ? '1px dashed blue' : '0px' }}
-          >
-            Выберите начинку
-          </div>
+        <div
+          ref={(el) => {
+            dropRefBurgerConstructor(el);
+          }}
+          className={styles.container}
+        >
+          {burgerConstructorItems}
         </div>
         {bun ? (
           <div

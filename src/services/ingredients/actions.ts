@@ -6,7 +6,7 @@ import type { Dispatch } from '@reduxjs/toolkit';
 export const GET_INGREDIENTS = 'GET_INGREDIENTS';
 export const TASKS_LOADING = 'TASKS_LOADING';
 export const TASKS_ERROR = 'TASKS_ERROR';
-export const SET_COUNT_BUN = 'SET_COUNT_BUN';
+export const SET_BUNS = 'SET_BUNS';
 
 export const loadingIngredients =
   () =>
@@ -39,12 +39,22 @@ export const loadingIngredients =
       });
   };
 
-export const setCountBun = (
+export const setBuns = (
   id: TIngredient['_id']
 ): {
   type: string;
   payload: TIngredient['_id'];
 } => ({
-  type: SET_COUNT_BUN,
+  type: SET_BUNS,
   payload: id,
+});
+
+export const addCounterIngredient = (
+  ingredients: TIngredient[]
+): {
+  type: string;
+  payload: TIngredient[];
+} => ({
+  type: GET_INGREDIENTS,
+  payload: ingredients,
 });

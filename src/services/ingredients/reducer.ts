@@ -1,12 +1,16 @@
-import { GET_INGREDIENTS, TASKS_ERROR, SET_COUNT_BUN } from './actions';
+import { GET_INGREDIENTS, TASKS_ERROR, SET_BUNS } from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: {
   ingredients: TIngredient[];
+  error: null | Error;
+  loading: boolean;
 } = {
   ingredients: [],
+  error: null,
+  loading: false,
 };
 
 export const ingredientsReducer = (
@@ -18,7 +22,7 @@ export const ingredientsReducer = (
       return { ...state, ingredients: action.payload };
     case TASKS_ERROR:
       return { ...state, loading: false, error: action.payload };
-    case SET_COUNT_BUN: {
+    case SET_BUNS: {
       const TWO_BUNS = 2;
       const index = state.ingredients.findIndex(
         (item: TIngredient) => item._id === action.payload
