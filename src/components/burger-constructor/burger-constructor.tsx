@@ -21,40 +21,26 @@ import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [orderCost, setOrderCost] = useState(0);
   const dispatch = useDispatch();
   const bun = useSelector<RootState, TIngredient>(
     (state): TIngredient => state.burgerConstructor.bun as TIngredient
   );
-  console.log('переменная: ', bun);
 
   const burgerConstructor = useSelector<RootState, TIngredient[]>(
     (state): TIngredient[] => state.burgerConstructor.burgerConstructor as TIngredient[]
   );
 
-  const ingredients = useSelector<RootState, TIngredient[]>(
-    (state): TIngredient[] => state.ingredients.ingredients as TIngredient[]
-  );
-
   const [, dropRefBurgerConstructor] = useDrop(() => ({
     accept: 'ingredient',
     drop(ingredient: TIngredient): void {
-      console.log('метод: ', bun);
       const constructorIngredient = {
         ...ingredient,
         key: uuidv4(),
       };
+      setOrderCost((item) => item + ingredient.price);
       dispatch(addIngredient(constructorIngredient));
-      const localIngredients = ingredients.map((item: TIngredient) => {
-        if (item._id === constructorIngredient._id) {
-          return {
-            ...item,
-            count: (item.count += 1),
-          };
-        }
-        return item;
-      });
-      console.log('ingredients: ', ingredients);
-      dispatch(addCounterIngredient(localIngredients));
+      dispatch(addCounterIngredient(constructorIngredient));
     },
   }));
 
@@ -178,7 +164,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
         )}
         <div className={`${styles.place_order} mt-10`}>
           <div className={`${styles.price} mr-10`}>
-            <div className="text text_type_digits-medium mr-1">610</div>
+            <div className="text text_type_digits-medium mr-1">{orderCost}</div>
             <CurrencyIcon type="primary" />
           </div>
           <Button

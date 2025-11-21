@@ -4,9 +4,9 @@ import type { TIngredient } from '@/utils/types';
 import type { Dispatch } from '@reduxjs/toolkit';
 
 export const GET_INGREDIENTS = 'GET_INGREDIENTS';
-export const TASKS_LOADING = 'TASKS_LOADING';
 export const TASKS_ERROR = 'TASKS_ERROR';
 export const SET_BUNS = 'SET_BUNS';
+export const ADD_COUNTER_INGREDIENT = 'ADD_COUNTER_INGREDIENT';
 
 export const loadingIngredients =
   () =>
@@ -50,11 +50,11 @@ export const setBuns = (
 });
 
 export const addCounterIngredient = (
-  ingredients: TIngredient[]
+  ingredient: TIngredient
 ): {
   type: string;
-  payload: TIngredient[];
+  payload: TIngredient;
 } => ({
-  type: GET_INGREDIENTS,
-  payload: ingredients,
+  type: ADD_COUNTER_INGREDIENT,
+  payload: ingredient,
 });

@@ -1,4 +1,9 @@
-import { GET_INGREDIENTS, TASKS_ERROR, SET_BUNS } from './actions';
+import {
+  GET_INGREDIENTS,
+  TASKS_ERROR,
+  SET_BUNS,
+  ADD_COUNTER_INGREDIENT,
+} from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -22,6 +27,19 @@ export const ingredientsReducer = (
       return { ...state, ingredients: action.payload };
     case TASKS_ERROR:
       return { ...state, loading: false, error: action.payload };
+    case ADD_COUNTER_INGREDIENT: {
+      const localPayload: TIngredient = action.payload as unknown as TIngredient;
+      const localIngredients = state.ingredients.map((item: TIngredient) => {
+        if (item._id === localPayload._id) {
+          return {
+            ...item,
+            count: (item.count += 1),
+          };
+        }
+        return item;
+      });
+      return { ...state, ingredients: localIngredients };
+    }
     case SET_BUNS: {
       const TWO_BUNS = 2;
       const index = state.ingredients.findIndex(
