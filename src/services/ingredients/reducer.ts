@@ -3,6 +3,7 @@ import {
   TASKS_ERROR,
   SET_BUNS,
   ADD_COUNTER_INGREDIENT,
+  REMOVE_COUNTER_INGREDIENT,
 } from './actions';
 
 import type { TIngredient } from '@/utils/types';
@@ -28,12 +29,23 @@ export const ingredientsReducer = (
     case TASKS_ERROR:
       return { ...state, loading: false, error: action.payload };
     case ADD_COUNTER_INGREDIENT: {
-      const localPayload: TIngredient = action.payload as unknown as TIngredient;
       const localIngredients = state.ingredients.map((item: TIngredient) => {
-        if (item._id === localPayload._id) {
+        if (item._id === action.payload) {
           return {
             ...item,
             count: (item.count += 1),
+          };
+        }
+        return item;
+      });
+      return { ...state, ingredients: localIngredients };
+    }
+    case REMOVE_COUNTER_INGREDIENT: {
+      const localIngredients = state.ingredients.map((item: TIngredient) => {
+        if (item._id === action.payload) {
+          return {
+            ...item,
+            count: (item.count -= 1),
           };
         }
         return item;

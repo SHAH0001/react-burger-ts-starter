@@ -7,6 +7,7 @@ export const GET_INGREDIENTS = 'GET_INGREDIENTS';
 export const TASKS_ERROR = 'TASKS_ERROR';
 export const SET_BUNS = 'SET_BUNS';
 export const ADD_COUNTER_INGREDIENT = 'ADD_COUNTER_INGREDIENT';
+export const REMOVE_COUNTER_INGREDIENT = 'REMOVE_COUNTER_INGREDIENT';
 
 export const loadingIngredients =
   () =>
@@ -50,11 +51,21 @@ export const setBuns = (
 });
 
 export const addCounterIngredient = (
-  ingredient: TIngredient
+  id: TIngredient['_id']
 ): {
   type: string;
-  payload: TIngredient;
+  payload: TIngredient['_id'];
 } => ({
   type: ADD_COUNTER_INGREDIENT,
-  payload: ingredient,
+  payload: id,
+});
+
+export const removeCounterIngredient = (
+  id: TIngredient['_id']
+): {
+  type: string;
+  payload: TIngredient['_id'];
+} => ({
+  type: REMOVE_COUNTER_INGREDIENT,
+  payload: id,
 });

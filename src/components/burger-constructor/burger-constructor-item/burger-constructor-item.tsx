@@ -10,10 +10,16 @@ import styles from './burger-constructor-item.module.css';
 
 type TBurgerConstructorItemProps = {
   ingredient: TIngredient;
+  deleteIngredient: (
+    id: TIngredient['_id'],
+    key: TIngredient['key'],
+    price: TIngredient['price']
+  ) => void;
 };
 
 export const BurgerConstructorItem = ({
   ingredient,
+  deleteIngredient,
 }: TBurgerConstructorItemProps): React.JSX.Element => {
   return (
     <div
@@ -25,7 +31,12 @@ export const BurgerConstructorItem = ({
         <div className={styles.burger_constructor_name}>{ingredient.name}</div>
         <div className=" mr-1">{ingredient.price}</div>
         <CurrencyIcon type="primary" className="mr-5" />
-        <DeleteIcon type="primary" />
+        <DeleteIcon
+          type="primary"
+          onClick={() =>
+            deleteIngredient(ingredient._id, ingredient.key, ingredient.price)
+          }
+        />
       </div>
     </div>
   );

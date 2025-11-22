@@ -1,5 +1,9 @@
-import { addIngredient, attachBun } from '@/services/burgerConstructor/actions';
-import { addCounterIngredient, setBuns } from '@/services/ingredients/actions';
+import {
+  addIngredient,
+  attachBun,
+  removeIngredient,
+} from '@/services/burgerConstructor/actions';
+import { addCounterIngredient, removeCounterIngredient, setBuns } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
   LockIcon,
@@ -40,7 +44,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
       };
       setOrderCost((item) => item + ingredient.price);
       dispatch(addIngredient(constructorIngredient));
-      dispatch(addCounterIngredient(constructorIngredient));
+      dispatch(addCounterIngredient(ingredient._id));
     },
   }));
 
@@ -90,10 +94,24 @@ export const BurgerConstructor = (): React.JSX.Element => {
     setIsModalOpen(true);
   };
 
+  const deleteIngredient = (
+    id: TIngredient['_id'],
+    key: TIngredient['key'],
+    price: TIngredient['price']
+  ): void => {
+    setOrderCost((item) => item - price);
+    dispatch(removeIngredient(key));
+    dispatch(removeCounterIngredient(id));
+  };
+
   let burgerConstructorItems;
   if (burgerConstructor.length > 0) {
     burgerConstructorItems = burgerConstructor.map((ingredient) => (
-      <BurgerConstructorItem key={ingredient.key} ingredient={ingredient} />
+      <BurgerConstructorItem
+        key={ingredient.key}
+        ingredient={ingredient}
+        deleteIngredient={deleteIngredient}
+      />
     ));
   } else {
     burgerConstructorItems = (
