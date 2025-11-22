@@ -3,7 +3,11 @@ import {
   attachBun,
   removeIngredient,
 } from '@/services/burgerConstructor/actions';
-import { addCounterIngredient, removeCounterIngredient, setBuns } from '@/services/ingredients/actions';
+import {
+  addCounterIngredient,
+  removeCounterIngredient,
+  setBuns,
+} from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
   LockIcon,
