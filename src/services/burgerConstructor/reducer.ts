@@ -1,4 +1,4 @@
-import { ATTACH_BUN, ADD_INGREDIENT, REMOVE_INGREDIENT } from './actions';
+import { ATTACH_BUN, ADD_INGREDIENT, REMOVE_INGREDIENT, MOVE_CARD } from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -30,6 +30,26 @@ export const constructorReducer = (
           (item) => item.key !== action.payload
         ),
       };
+    case MOVE_CARD: {
+      console.log('action.payload: ', action.payload);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const ingredientKey = action.payload.dragIngredient as TIngredient;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const hoverIndex = action.payload.hoverIndex as number;
+      const dragIngredientIndex = state.burgerConstructor.findIndex(
+        (item) => item.key === ingredientKey.key
+      );
+      const burgerConstructorLocal = [...state.burgerConstructor];
+      burgerConstructorLocal.splice(dragIngredientIndex, 1);
+      burgerConstructorLocal.splice(
+        hoverIndex,
+        0,
+        state.burgerConstructor[dragIngredientIndex]
+      );
+      return { ...state, burgerConstructor: burgerConstructorLocal };
+    }
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import type { TIngredient } from '@/utils/types';
 export const ATTACH_BUN = 'ATTACH_BUN';
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
+export const MOVE_CARD = 'MOVE_CARD';
 
 export const attachBun = (
   bun: TIngredient
@@ -32,4 +33,15 @@ export const removeIngredient = (
 } => ({
   type: REMOVE_INGREDIENT,
   payload: key,
+});
+
+export const moveCard = (
+  dragIngredient: TIngredient,
+  hoverIndex: number
+): {
+  type: string;
+  payload: { dragIngredient: TIngredient; hoverIndex: number };
+} => ({
+  type: MOVE_CARD,
+  payload: { dragIngredient, hoverIndex },
 });

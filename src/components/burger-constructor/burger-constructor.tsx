@@ -110,10 +110,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   let burgerConstructorItems;
   if (burgerConstructor.length > 0) {
-    burgerConstructorItems = burgerConstructor.map((ingredient) => (
+    burgerConstructorItems = burgerConstructor.map((ingredient, index) => (
       <BurgerConstructorItem
         key={ingredient.key}
         ingredient={ingredient}
+        index={index}
         deleteIngredient={deleteIngredient}
       />
     ));
