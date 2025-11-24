@@ -31,7 +31,6 @@ export const constructorReducer = (
         ),
       };
     case MOVE_CARD: {
-      console.log('action.payload: ', action.payload);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       const ingredientKey = action.payload.dragIngredient as TIngredient;
