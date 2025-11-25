@@ -1,5 +1,7 @@
+import { modalIngredient } from '@/services/ingredients/actions';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
@@ -16,8 +18,8 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectIngredient, setSelectIngredient] = useState<TIngredient | null>(null);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
@@ -28,9 +30,8 @@ export const BurgerIngredients = ({
     if (!findIngredient) {
       return;
     }
-
-    setSelectIngredient(findIngredient);
     setIsModalOpen(true);
+    dispatch(modalIngredient(findIngredient));
   };
 
   const onclose = (): void => {
@@ -104,9 +105,9 @@ export const BurgerIngredients = ({
           </div>
         </div>
       </section>
-      {isModalOpen && selectIngredient && (
+      {isModalOpen && (
         <Modal title={'Детали ингредиента'} onclose={onclose}>
-          <IngredientDetails selectIngredient={selectIngredient} />
+          <IngredientDetails />
         </Modal>
       )}
     </>

@@ -4,6 +4,7 @@ import {
   SET_BUNS,
   ADD_COUNTER_INGREDIENT,
   REMOVE_COUNTER_INGREDIENT,
+  MODAL_INGREDIENT,
 } from './actions';
 
 import type { TIngredient } from '@/utils/types';
@@ -13,10 +14,12 @@ const initialState: {
   ingredients: TIngredient[];
   error: null | Error;
   loading: boolean;
+  modalIngredient: null | TIngredient;
 } = {
   ingredients: [],
   error: null,
   loading: false,
+  modalIngredient: null,
 };
 
 export const ingredientsReducer = (
@@ -79,6 +82,9 @@ export const ingredientsReducer = (
           ...ingredients.slice(index + 1),
         ],
       };
+    }
+    case MODAL_INGREDIENT: {
+      return { ...state, modalIngredient: action.payload };
     }
     default:
       return state;

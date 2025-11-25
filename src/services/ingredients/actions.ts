@@ -8,6 +8,7 @@ export const TASKS_ERROR = 'TASKS_ERROR';
 export const SET_BUNS = 'SET_BUNS';
 export const ADD_COUNTER_INGREDIENT = 'ADD_COUNTER_INGREDIENT';
 export const REMOVE_COUNTER_INGREDIENT = 'REMOVE_COUNTER_INGREDIENT';
+export const MODAL_INGREDIENT = 'MODAL_INGREDIENT';
 
 export const loadingIngredients =
   () =>
@@ -68,4 +69,14 @@ export const removeCounterIngredient = (
 } => ({
   type: REMOVE_COUNTER_INGREDIENT,
   payload: id,
+});
+
+export const modalIngredient = (
+  ingredient: TIngredient
+): {
+  type: string;
+  payload: TIngredient;
+} => ({
+  type: MODAL_INGREDIENT,
+  payload: ingredient,
 });
