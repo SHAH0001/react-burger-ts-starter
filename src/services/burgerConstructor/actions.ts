@@ -1,10 +1,15 @@
+import { serverUrl } from '@/utils/serverUrl';
+
 import type { TIngredient } from '@/utils/types';
+import type { Dispatch } from '@reduxjs/toolkit';
 
 export const ATTACH_BUN = 'ATTACH_BUN';
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
 export const MOVE_CARD = 'MOVE_CARD';
 export const ORDER_COST = 'ORDER_COST';
+export const GET_ORDER_NUMBER = 'GET_ORDER_NUMBER';
+export const ORDER_NUMBER_ERROR = 'ORDER_NUMBER_ERROR';
 
 export const attachBun = (
   bun: TIngredient
@@ -50,3 +55,33 @@ export const moveCard = (
 export const setOrderCost = (): { type: string } => ({
   type: ORDER_COST,
 });
+
+export const placeOrder =
+  (identifiers: string[]) =>
+  async (dispatch: Dispatch): Promise<void> => {
+    return fetch(`${serverUrl}orders`, {
+      method: 'POST',
+      body: JSON.stringify(identifiers),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(new Error(`Ошибка ${response.status}`));
+      })
+      .then((response) => {
+        dispatch({
+          type: GET_ORDER_NUMBER,
+          payload: response.order.number,
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: ORDER_NUMBER_ERROR,
+          payload: error.message,
+        });
+      });
+  };

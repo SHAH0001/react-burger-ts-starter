@@ -1,6 +1,7 @@
 import {
   addIngredient,
   attachBun,
+  placeOrder,
   removeIngredient,
   setOrderCost,
 } from '@/services/burgerConstructor/actions';
@@ -102,7 +103,14 @@ export const BurgerConstructor = (): React.JSX.Element => {
     setIsModalOpen(false);
   };
 
-  const placeOrder = (): void => {
+  const openOrderModal = (): void => {
+    const ingredientIdentifiers: string[] = [];
+    burgerConstructor.forEach((item: TIngredient) => {
+      ingredientIdentifiers.push(item._id);
+    });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    dispatch(placeOrder({ ingredients: [bun._id, ...ingredientIdentifiers, bun._id] }));
     setIsModalOpen(true);
   };
 
@@ -195,7 +203,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
             <CurrencyIcon type="primary" />
           </div>
           <Button
-            onClick={() => placeOrder()}
+            onClick={() => openOrderModal()}
             size="large"
             type="primary"
             htmlType={'button'}

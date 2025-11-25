@@ -4,6 +4,8 @@ import {
   REMOVE_INGREDIENT,
   MOVE_CARD,
   ORDER_COST,
+  GET_ORDER_NUMBER,
+  ORDER_NUMBER_ERROR,
 } from './actions';
 
 import type { TIngredient } from '@/utils/types';
@@ -13,10 +15,14 @@ const initialState: {
   burgerConstructor: TIngredient[];
   bun: null | TIngredient;
   orderCost: number;
+  orderNumber: number;
+  orderNumberError: string | null;
 } = {
   burgerConstructor: [],
   bun: null,
   orderCost: 0,
+  orderNumber: 0,
+  orderNumberError: null,
 };
 
 export const constructorReducer = (
@@ -68,6 +74,11 @@ export const constructorReducer = (
       });
       return { ...state, orderCost: localOrderCost };
     }
+    case GET_ORDER_NUMBER: {
+      return { ...state, orderNumber: action.payload };
+    }
+    case ORDER_NUMBER_ERROR:
+      return { ...state, orderNumberError: action.payload };
     default:
       return state;
   }
