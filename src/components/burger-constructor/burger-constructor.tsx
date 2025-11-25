@@ -2,6 +2,7 @@ import {
   addIngredient,
   attachBun,
   removeIngredient,
+  setOrderCost,
 } from '@/services/burgerConstructor/actions';
 import {
   addCounterIngredient,
@@ -29,7 +30,6 @@ import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [orderCost, setOrderCost] = useState(0);
   const dispatch = useDispatch();
   const bun = useSelector<RootState, TIngredient>(
     (state): TIngredient => state.burgerConstructor.bun as TIngredient
@@ -39,6 +39,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
     (state): TIngredient[] => state.burgerConstructor.burgerConstructor as TIngredient[]
   );
 
+  const orderCost = useSelector<RootState, number>(
+    (state): number => state.burgerConstructor.orderCost
+  );
+
   const [, dropRefBurgerConstructor] = useDrop(() => ({
     accept: 'ingredient',
     drop(ingredient: TIngredient): void {
@@ -46,9 +50,9 @@ export const BurgerConstructor = (): React.JSX.Element => {
         ...ingredient,
         key: uuidv4(),
       };
-      setOrderCost((item) => item + ingredient.price);
       dispatch(addIngredient(constructorIngredient));
       dispatch(addCounterIngredient(ingredient._id));
+      dispatch(setOrderCost());
     },
   }));
 
@@ -57,6 +61,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
       dispatch(setBuns(ingredient._id));
+      dispatch(setOrderCost());
     },
     collect: (monitor) => ({
       isOverUp: monitor.isOver(),
@@ -68,6 +73,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
       dispatch(setBuns(ingredient._id));
+      dispatch(setOrderCost());
     },
     collect: (monitor) => ({
       isOverDown: monitor.isOver(),
@@ -79,6 +85,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
       dispatch(setBuns(ingredient._id));
+      dispatch(setOrderCost());
     },
   }));
 
@@ -87,6 +94,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
     drop(ingredient: TIngredient): void {
       dispatch(attachBun(ingredient));
       dispatch(setBuns(ingredient._id));
+      dispatch(setOrderCost());
     },
   }));
 
@@ -98,14 +106,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
     setIsModalOpen(true);
   };
 
-  const deleteIngredient = (
-    id: TIngredient['_id'],
-    key: TIngredient['key'],
-    price: TIngredient['price']
-  ): void => {
-    setOrderCost((item) => item - price);
+  const deleteIngredient = (id: TIngredient['_id'], key: TIngredient['key']): void => {
     dispatch(removeIngredient(key));
     dispatch(removeCounterIngredient(id));
+    dispatch(setOrderCost());
   };
 
   let burgerConstructorItems;

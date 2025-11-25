@@ -1,4 +1,10 @@
-import { ATTACH_BUN, ADD_INGREDIENT, REMOVE_INGREDIENT, MOVE_CARD } from './actions';
+import {
+  ATTACH_BUN,
+  ADD_INGREDIENT,
+  REMOVE_INGREDIENT,
+  MOVE_CARD,
+  ORDER_COST,
+} from './actions';
 
 import type { TIngredient } from '@/utils/types';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -6,9 +12,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 const initialState: {
   burgerConstructor: TIngredient[];
   bun: null | TIngredient;
+  orderCost: number;
 } = {
   burgerConstructor: [],
   bun: null,
+  orderCost: 0,
 };
 
 export const constructorReducer = (
@@ -48,6 +56,17 @@ export const constructorReducer = (
         state.burgerConstructor[dragIngredientIndex]
       );
       return { ...state, burgerConstructor: burgerConstructorLocal };
+    }
+    case ORDER_COST: {
+      let localOrderCost = 0;
+
+      if (state.bun) {
+        localOrderCost = state.bun.price + state.bun.price;
+      }
+      state.burgerConstructor.forEach((item) => {
+        localOrderCost += item.price;
+      });
+      return { ...state, orderCost: localOrderCost };
     }
     default:
       return state;

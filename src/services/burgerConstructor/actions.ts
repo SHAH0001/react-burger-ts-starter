@@ -4,6 +4,7 @@ export const ATTACH_BUN = 'ATTACH_BUN';
 export const ADD_INGREDIENT = 'ADD_INGREDIENT';
 export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
 export const MOVE_CARD = 'MOVE_CARD';
+export const ORDER_COST = 'ORDER_COST';
 
 export const attachBun = (
   bun: TIngredient
@@ -44,4 +45,8 @@ export const moveCard = (
 } => ({
   type: MOVE_CARD,
   payload: { dragIngredient, hoverIndex },
+});
+
+export const setOrderCost = (): { type: string } => ({
+  type: ORDER_COST,
 });
