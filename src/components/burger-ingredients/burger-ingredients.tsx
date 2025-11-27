@@ -1,6 +1,6 @@
 import { modalIngredient } from '@/services/ingredients/actions';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
@@ -20,6 +20,12 @@ export const BurgerIngredients = ({
 }: TBurgerIngredientsProps): React.JSX.Element => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentTab, setCurrentTab] = useState('bun');
+
+  const containerRef = useRef(null);
+  const bunsRef = useRef(null);
+  const fillingsRef = useRef(null);
+  const saucesRef = useRef(null);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
@@ -38,6 +44,63 @@ export const BurgerIngredients = ({
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    const container: HTMLElement | null = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (container) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const container: HTMLElement | null = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const containerTop = container.getBoundingClientRect().top;
+
+    const refs = [
+      { type: 'bun', node: bunsRef.current },
+      { type: 'fillings', node: fillingsRef.current },
+      { type: 'sauces', node: saucesRef.current },
+    ];
+
+    let closestType = currentTab;
+    let minDelta = Infinity;
+
+    refs.forEach(({ type, node }) => {
+      if (!node) {
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const rect = node.getBoundingClientRect();
+      const delta = Math.abs(rect.top - containerTop);
+
+      if (delta < minDelta) {
+        minDelta = delta;
+        closestType = type;
+      }
+    });
+
+    setCurrentTab(closestType);
+  }, [currentTab]);
+
   return (
     <>
       <section className={styles.burger_ingredients}>
@@ -45,7 +108,7 @@ export const BurgerIngredients = ({
           <ul className={styles.menu}>
             <Tab
               value="bun"
-              active={true}
+              active={currentTab === 'bun'}
               onClick={() => {
                 /* TODO */
               }}
@@ -54,7 +117,7 @@ export const BurgerIngredients = ({
             </Tab>
             <Tab
               value="main"
-              active={false}
+              active={currentTab === 'fillings'}
               onClick={() => {
                 /* TODO */
               }}
@@ -63,7 +126,7 @@ export const BurgerIngredients = ({
             </Tab>
             <Tab
               value="sauce"
-              active={false}
+              active={currentTab === 'sauces'}
               onClick={() => {
                 /* TODO */
               }}
@@ -72,8 +135,10 @@ export const BurgerIngredients = ({
             </Tab>
           </ul>
         </nav>
-        <div className={styles.container}>
-          <div className="text text_type_main-medium mt-10">Булки</div>
+        <div ref={containerRef} className={styles.container}>
+          <div ref={bunsRef} className="text text_type_main-medium mt-10">
+            Булки
+          </div>
           <div className={styles.ingredients}>
             {buns.map((bun) => (
               <BurgerIngredient
@@ -83,7 +148,9 @@ export const BurgerIngredients = ({
               />
             ))}
           </div>
-          <div className="text text_type_main-medium">Начинки</div>
+          <div ref={fillingsRef} className="text text_type_main-medium">
+            Начинки
+          </div>
           <div className={styles.ingredients}>
             {fillings.map((filling) => (
               <BurgerIngredient
@@ -93,7 +160,9 @@ export const BurgerIngredients = ({
               />
             ))}
           </div>
-          <div className="text text_type_main-medium">Соусы</div>
+          <div ref={saucesRef} className="text text_type_main-medium">
+            Соусы
+          </div>
           <div className={styles.ingredients}>
             {sauces.map((sauce) => (
               <BurgerIngredient
