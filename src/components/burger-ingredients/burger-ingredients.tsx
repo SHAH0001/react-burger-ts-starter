@@ -79,8 +79,8 @@ export const BurgerIngredients = ({
       { type: 'sauces', node: saucesRef.current },
     ];
 
-    let closestType = currentTab;
-    let minDelta = Infinity;
+    let loaclCurrentTab = currentTab;
+    let inf = Infinity;
 
     refs.forEach(({ type, node }) => {
       if (!node) {
@@ -89,16 +89,15 @@ export const BurgerIngredients = ({
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
-      const rect = node.getBoundingClientRect();
-      const delta = Math.abs(rect.top - containerTop);
+      const modulNumber = Math.abs(node.getBoundingClientRect().top - containerTop);
 
-      if (delta < minDelta) {
-        minDelta = delta;
-        closestType = type;
+      if (modulNumber < inf) {
+        inf = modulNumber;
+        loaclCurrentTab = type;
       }
     });
 
-    setCurrentTab(closestType);
+    setCurrentTab(loaclCurrentTab);
   }, [currentTab]);
 
   return (
