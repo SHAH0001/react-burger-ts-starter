@@ -1,3 +1,4 @@
+import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 
 import type { TIngredient } from '@/utils/types';
@@ -14,12 +15,7 @@ export const loadingIngredients =
   () =>
   async (dispatch: Dispatch): Promise<void> => {
     return fetch(`${serverUrl}ingredients`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error(`Ошибка ${response.status}`));
-      })
+      .then(checkResponse)
       .then(({ data }) => {
         const payload = data.map((item: TIngredient) => {
           return {

@@ -1,3 +1,4 @@
+import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 
 import type { TIngredient } from '@/utils/types';
@@ -66,12 +67,7 @@ export const placeOrder =
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error(`Ошибка ${response.status}`));
-      })
+      .then(checkResponse)
       .then((response) => {
         dispatch({
           type: GET_ORDER_NUMBER,
