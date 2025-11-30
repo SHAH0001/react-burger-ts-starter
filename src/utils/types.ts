@@ -11,4 +11,6 @@ export type TIngredient = {
   image_large: string;
   image_mobile: string;
   __v: number;
+  count: number; // Добавляется в action
+  key: string; // Добавляется в action
 };

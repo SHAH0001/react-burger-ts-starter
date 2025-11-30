@@ -1,5 +1,7 @@
+import { modalIngredient } from '@/services/ingredients/actions';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
@@ -16,8 +18,14 @@ type TBurgerIngredientsProps = {
 export const BurgerIngredients = ({
   ingredients,
 }: TBurgerIngredientsProps): React.JSX.Element => {
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectIngredient, setSelectIngredient] = useState<TIngredient | null>(null);
+  const [currentTab, setCurrentTab] = useState('bun');
+
+  const containerRef = useRef(null);
+  const bunsRef = useRef(null);
+  const fillingsRef = useRef(null);
+  const saucesRef = useRef(null);
 
   const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
   const fillings = ingredients.filter((ingredient) => ingredient.type === 'main');
@@ -28,14 +36,69 @@ export const BurgerIngredients = ({
     if (!findIngredient) {
       return;
     }
-
-    setSelectIngredient(findIngredient);
     setIsModalOpen(true);
+    dispatch(modalIngredient(findIngredient));
   };
 
   const onclose = (): void => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    const container: HTMLElement | null = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      if (container) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        container.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const container: HTMLElement | null = containerRef.current;
+    if (!container) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const containerTop = container.getBoundingClientRect().top;
+
+    const refs = [
+      { type: 'bun', node: bunsRef.current },
+      { type: 'fillings', node: fillingsRef.current },
+      { type: 'sauces', node: saucesRef.current },
+    ];
+
+    let loaclCurrentTab = currentTab;
+    let inf = Infinity;
+
+    refs.forEach(({ type, node }) => {
+      if (!node) {
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const modulNumber = Math.abs(node.getBoundingClientRect().top - containerTop);
+
+      if (modulNumber < inf) {
+        inf = modulNumber;
+        loaclCurrentTab = type;
+      }
+    });
+
+    setCurrentTab(loaclCurrentTab);
+  }, [currentTab]);
 
   return (
     <>
@@ -44,7 +107,7 @@ export const BurgerIngredients = ({
           <ul className={styles.menu}>
             <Tab
               value="bun"
-              active={true}
+              active={currentTab === 'bun'}
               onClick={() => {
                 /* TODO */
               }}
@@ -53,7 +116,7 @@ export const BurgerIngredients = ({
             </Tab>
             <Tab
               value="main"
-              active={false}
+              active={currentTab === 'fillings'}
               onClick={() => {
                 /* TODO */
               }}
@@ -62,7 +125,7 @@ export const BurgerIngredients = ({
             </Tab>
             <Tab
               value="sauce"
-              active={false}
+              active={currentTab === 'sauces'}
               onClick={() => {
                 /* TODO */
               }}
@@ -71,8 +134,10 @@ export const BurgerIngredients = ({
             </Tab>
           </ul>
         </nav>
-        <div className={styles.container}>
-          <div className="text text_type_main-medium mt-10">Булки</div>
+        <div ref={containerRef} className={styles.container}>
+          <div ref={bunsRef} className="text text_type_main-medium mt-10">
+            Булки
+          </div>
           <div className={styles.ingredients}>
             {buns.map((bun) => (
               <BurgerIngredient
@@ -82,7 +147,9 @@ export const BurgerIngredients = ({
               />
             ))}
           </div>
-          <div className="text text_type_main-medium">Начинки</div>
+          <div ref={fillingsRef} className="text text_type_main-medium">
+            Начинки
+          </div>
           <div className={styles.ingredients}>
             {fillings.map((filling) => (
               <BurgerIngredient
@@ -92,7 +159,9 @@ export const BurgerIngredients = ({
               />
             ))}
           </div>
-          <div className="text text_type_main-medium">Соусы</div>
+          <div ref={saucesRef} className="text text_type_main-medium">
+            Соусы
+          </div>
           <div className={styles.ingredients}>
             {sauces.map((sauce) => (
               <BurgerIngredient
@@ -104,9 +173,9 @@ export const BurgerIngredients = ({
           </div>
         </div>
       </section>
-      {isModalOpen && selectIngredient && (
+      {isModalOpen && (
         <Modal title={'Детали ингредиента'} onclose={onclose}>
-          <IngredientDetails selectIngredient={selectIngredient} />
+          <IngredientDetails />
         </Modal>
       )}
     </>

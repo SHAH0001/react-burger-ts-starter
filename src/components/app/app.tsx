@@ -1,27 +1,28 @@
+import { loadingIngredients } from '@/services/ingredients/actions';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 
-import { serverUrl } from '../../utils/serverUrl';
+import type { RootState } from '../../services/store';
+import type { TIngredient } from '@/utils/types';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const [ingredients, setIngredients] = useState([]);
+  const dispatch = useDispatch();
+
+  const ingredients = useSelector<RootState, TIngredient[]>(
+    (state): TIngredient[] => state.ingredients.ingredients as TIngredient[]
+  );
 
   useEffect(() => {
-    void fetch(`${serverUrl}ingredients`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(new Error(`Ошибка ${response.status}`));
-      })
-      .then((response) => setIngredients(response.data))
-      .catch((error) => console.error(error));
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    dispatch(loadingIngredients());
   }, []);
 
   if (ingredients.length === 0) {
@@ -35,7 +36,7 @@ export const App = (): React.JSX.Element => {
         </h1>
         <main className={`${styles.main} pl-5 pr-5`}>
           <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor ingredients={ingredients} />
+          <BurgerConstructor />
         </main>
       </div>
     );
