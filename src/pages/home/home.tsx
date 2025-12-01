@@ -3,7 +3,6 @@ import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 
@@ -30,7 +29,6 @@ export const Home = (): React.JSX.Element => {
   } else {
     return (
       <div className={styles.app}>
-        <AppHeader />
         <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
           Соберите бургер
         </h1>

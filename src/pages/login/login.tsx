@@ -1,0 +1,57 @@
+import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import styles from './login.module.css';
+
+export const Login = (): React.JSX.Element => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  return (
+    <div className={styles.login}>
+      <EmailInput
+        name="email"
+        onChange={(event) => setEmail(event.target.value)}
+        placeholder="E-mail"
+        value={email}
+        disabled={false}
+      />
+      <div className="mt-6 mb-6">
+        <Input
+          icon="ShowIcon"
+          name="name"
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder="Пароль"
+          type="password"
+          value={password}
+        />
+      </div>
+      <Button
+        onClick={function fee() {}}
+        size="small"
+        type="primary"
+        htmlType={'button'}
+      >
+        Войти
+      </Button>
+      <div className={styles.auth_reset}>
+        <div className={styles.wrapper}>
+          <div className="text text_type_main-default mb-4 mr-1">
+            Вы новой пользователь?
+          </div>
+          <div className="text text_type_main-default text_color_inactive">
+            <Link to="/register">Зарегистрироваться</Link>
+          </div>
+        </div>
+        <div className={styles.wrapper}>
+          <div className="text text_type_main-default mr-1">Забыли пароль?</div>
+          <div className="text text_type_main-default text_color_inactive">
+            <Link to="/reset-password">Востановить пароль</Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
