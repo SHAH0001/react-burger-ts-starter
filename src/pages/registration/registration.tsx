@@ -2,14 +2,23 @@ import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-comp
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import styles from './login.module.css';
+import styles from './registration.module.css';
 
-export const Login = (): React.JSX.Element => {
+export const Registration = (): React.JSX.Element => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   return (
-    <div className={styles.login}>
-      <div className="text text_type_main-large mb-6">Вход</div>
+    <div className={styles.registration}>
+      <div className="text text_type_main-large mb-6">Регистрация</div>
+      <div className="mb-6">
+        <Input
+          name="name"
+          onChange={(event) => setName(event.target.value)}
+          placeholder="Имя"
+          value={name}
+        />
+      </div>
       <EmailInput
         name="email"
         onChange={(event) => setEmail(event.target.value)}
@@ -33,21 +42,15 @@ export const Login = (): React.JSX.Element => {
         type="primary"
         htmlType={'button'}
       >
-        Войти
+        Зарегистрироваться
       </Button>
       <div className={styles.auth_reset}>
         <div className={styles.wrapper}>
           <div className="text text_type_main-default mb-4 mr-1">
-            Вы новой пользователь?
+            Уже зарегистрированы?
           </div>
           <div className="text text_type_main-default text_color_inactive">
-            <Link to="/registration">Зарегистрироваться</Link>
-          </div>
-        </div>
-        <div className={styles.wrapper}>
-          <div className="text text_type_main-default mr-1">Забыли пароль?</div>
-          <div className="text text_type_main-default text_color_inactive">
-            <Link to="/reset-password">Востановить пароль</Link>
+            <Link to="/login">Войти</Link>
           </div>
         </div>
       </div>
@@ -55,4 +58,4 @@ export const Login = (): React.JSX.Element => {
   );
 };
 
-export default Login;
+export default Registration;
