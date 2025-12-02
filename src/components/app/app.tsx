@@ -1,3 +1,4 @@
+import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Login } from '@/pages/login/login';
 import { Registration } from '@/pages/registration/registration';
@@ -16,6 +17,7 @@ export const App = (): React.JSX.Element => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
     </>
