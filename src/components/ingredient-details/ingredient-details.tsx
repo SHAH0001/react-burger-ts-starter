@@ -9,7 +9,7 @@ export const IngredientDetails = (): React.JSX.Element => {
   const modalIngredient = useSelector<RootState, TIngredient>(
     (state): TIngredient => state.ingredients.modalIngredient as TIngredient
   );
-
+  console.log('modalIngredient: ', modalIngredient);
   return (
     <div className={styles.modal}>
       <img src={modalIngredient.image_large} alt={modalIngredient.name} />

@@ -8,7 +8,7 @@ import { loadingIngredients } from '@/services/ingredients/actions';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 
@@ -27,6 +27,8 @@ export const App = (): React.JSX.Element => {
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
@@ -34,14 +36,12 @@ export const App = (): React.JSX.Element => {
   }, []);
 
   const onclose = (): void => {
-    console.log('onclose');
+    void navigate('/');
   };
 
   const location = useLocation();
 
   const state = location.state as { backgroundLocation?: Location };
-
-  console.log('location', location);
 
   if (ingredients.length === 0) {
     return <Preloader />;
@@ -55,7 +55,7 @@ export const App = (): React.JSX.Element => {
               <Route
                 path="/ingredients/:id"
                 element={
-                  <Modal onclose={onclose}>
+                  <Modal title={'Детали ингредиента'} onclose={onclose}>
                     <IngredientDetails />
                   </Modal>
                 }

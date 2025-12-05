@@ -30,7 +30,7 @@ export const BurgerIngredient = ({
       className={`${styles.ingredient} mb-10`}
       key={ingredient._id}
       to={`/ingredients/${ingredient._id}`}
-      state={{ backroundLocation: location }}
+      state={{ backgroundLocation: location }}
     >
       <div
         ref={(el) => {
