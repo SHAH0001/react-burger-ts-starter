@@ -1,5 +1,7 @@
+import { IngredientDetails } from '@/components/ingredient-details/ingredient-details';
+
 export const Ingredients = (): React.JSX.Element => {
-  return <div>ingredients</div>;
+  return <IngredientDetails />;
 };
 
 export default Ingredients;

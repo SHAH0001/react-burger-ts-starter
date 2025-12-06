@@ -23,7 +23,6 @@ export const BurgerIngredient = ({
     }),
   });
   const location = useLocation();
-  console.log('location: ', location);
 
   return (
     <Link
