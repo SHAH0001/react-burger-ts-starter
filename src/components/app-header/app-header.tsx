@@ -4,6 +4,7 @@ import {
   Logo,
   ProfileIcon,
 } from '@krgaa/react-developer-burger-ui-components';
+import { Link } from 'react-router-dom';
 
 import styles from './app-header.module.css';
 
@@ -22,9 +23,11 @@ export const AppHeader = (): React.JSX.Element => {
             <p className="text text_type_main-default ml-2">Лента заказов</p>
           </a>
         </div>
-        <div className={styles.logo}>
-          <Logo />
-        </div>
+        <Link to="/">
+          <div className={styles.logo}>
+            <Logo />
+          </div>
+        </Link>
         <a href="/profile" className={`${styles.link} ${styles.link_position_last}`}>
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default ml-2">Личный кабинет</p>
