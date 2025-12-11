@@ -1,13 +1,40 @@
+import { checkResponse } from '@/utils/checkResponse';
+import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import styles from './registration.module.css';
+import { setUser } from '@/services/user/actions';
 
 export const Registration = (): React.JSX.Element => {
+  const dispatch = useDispatch();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const register = async (): Promise<void> => {
+    return fetch(`${serverUrl}auth/register`, {
+      method: 'POST',
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(checkResponse)
+      .then((response) => {
+        dispatch(setUser(response.user));
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+      });
+  };
+
   return (
     <div className={styles.registration}>
       <div className="text text_type_main-large mb-6">Регистрация</div>
@@ -36,12 +63,7 @@ export const Registration = (): React.JSX.Element => {
           value={password}
         />
       </div>
-      <Button
-        onClick={function fee() {}}
-        size="small"
-        type="primary"
-        htmlType={'button'}
-      >
+      <Button onClick={register} size="small" type="primary" htmlType={'button'}>
         Зарегистрироваться
       </Button>
       <div className={styles.auth_reset}>

@@ -2,6 +2,7 @@ import { ForgotPassword } from '@/pages/forgot-password/forgot-password';
 import { Home } from '@/pages/home/home';
 import { Ingredients } from '@/pages/ingredients/ingredients';
 import { Login } from '@/pages/login/login';
+import { NotFound } from '@/pages/not-found/not-found';
 import { Registration } from '@/pages/registration/registration';
 import { ResetPassword } from '@/pages/reset-password/reset-password';
 import { loadingIngredients } from '@/services/ingredients/actions';
@@ -65,10 +66,11 @@ export const App = (): React.JSX.Element => {
           <Routes location={state?.backgroundLocation ?? location}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/registration" element={<Registration />} />
+            <Route path="/register" element={<Registration />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/ingredients/:id" element={<Ingredients />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </>

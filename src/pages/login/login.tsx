@@ -41,13 +41,13 @@ export const Login = (): React.JSX.Element => {
             Вы новой пользователь?
           </div>
           <div className="text text_type_main-default text_color_inactive">
-            <Link to="/registration">Зарегистрироваться</Link>
+            <Link to="/register">Зарегистрироваться</Link>
           </div>
         </div>
         <div className={styles.wrapper}>
           <div className="text text_type_main-default mr-1">Забыли пароль?</div>
           <div className="text text_type_main-default text_color_inactive">
-            <Link to="/reset-password">Востановить пароль</Link>
+            <Link to="/forgot-password">Востановить пароль</Link>
           </div>
         </div>
       </div>
