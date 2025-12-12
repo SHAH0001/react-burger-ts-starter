@@ -15,6 +15,7 @@ import { AppHeader } from '@components/app-header/app-header';
 
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Modal } from '../modal/modal';
+import { ProtectedRoute } from '../protected-route';
 
 import type { RootState } from '../../services/store';
 import type { TIngredient } from '@/utils/types';
@@ -65,13 +66,20 @@ export const App = (): React.JSX.Element => {
           )}
           <Routes location={state?.backgroundLocation ?? location}>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={<ProtectedRoute onlyUnAuth component={<Login />} />}
+            />
             <Route path="/register" element={<Registration />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/ingredients/:id" element={<Ingredients />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          {/* <Route
+            path="/login"
+            element={<ProtectedRoute onlyUnAuth component={<Login />} />}
+          /> */}
         </div>
       </>
     );
