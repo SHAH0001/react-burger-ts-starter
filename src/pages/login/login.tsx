@@ -1,12 +1,42 @@
+import { setUser } from '@/services/user/actions';
+import { checkResponse } from '@/utils/checkResponse';
+import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import styles from './login.module.css';
 
 export const Login = (): React.JSX.Element => {
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const login = async (): Promise<void> => {
+    if (email.length === 0 || password.length === 0) {
+      return;
+    }
+
+    return fetch(`${serverUrl}auth/login`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(checkResponse)
+      .then((response) => {
+        dispatch(setUser(response.user));
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+      });
+  };
+
   return (
     <div className={styles.login}>
       <div className="text text_type_main-large mb-6">Вход</div>
@@ -27,12 +57,7 @@ export const Login = (): React.JSX.Element => {
           value={password}
         />
       </div>
-      <Button
-        onClick={function fee() {}}
-        size="small"
-        type="primary"
-        htmlType={'button'}
-      >
+      <Button onClick={login} size="small" type="primary" htmlType={'button'}>
         Войти
       </Button>
       <div className={styles.auth_reset}>

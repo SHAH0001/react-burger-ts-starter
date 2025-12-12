@@ -1,3 +1,4 @@
+import { setUser } from '@/services/user/actions';
 import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
@@ -6,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import styles from './registration.module.css';
-import { setUser } from '@/services/user/actions';
 
 export const Registration = (): React.JSX.Element => {
   const dispatch = useDispatch();
@@ -16,6 +16,10 @@ export const Registration = (): React.JSX.Element => {
   const [password, setPassword] = useState('');
 
   const register = async (): Promise<void> => {
+    if (name.length === 0 || email.length === 0 || password.length === 0) {
+      return;
+    }
+
     return fetch(`${serverUrl}auth/register`, {
       method: 'POST',
       body: JSON.stringify({
