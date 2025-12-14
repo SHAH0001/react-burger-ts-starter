@@ -3,9 +3,12 @@ import { Home } from '@/pages/home/home';
 import { Ingredients } from '@/pages/ingredients/ingredients';
 import { Login } from '@/pages/login/login';
 import { NotFound } from '@/pages/not-found/not-found';
+import { OrderHistory } from '@/pages/order-history/order-history';
+import { Profile } from '@/pages/profile/profile';
 import { Registration } from '@/pages/registration/registration';
 import { ResetPassword } from '@/pages/reset-password/reset-password';
 import { loadingIngredients } from '@/services/ingredients/actions';
+import { getUser } from '@/services/user/actions';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,6 +38,9 @@ export const App = (): React.JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     dispatch(loadingIngredients());
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    dispatch(getUser());
   }, []);
 
   const onclose = (): void => {
@@ -74,12 +80,10 @@ export const App = (): React.JSX.Element => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/ingredients/:id" element={<Ingredients />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/order-history" element={<OrderHistory />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          {/* <Route
-            path="/login"
-            element={<ProtectedRoute onlyUnAuth component={<Login />} />}
-          /> */}
         </div>
       </>
     );

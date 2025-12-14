@@ -4,7 +4,7 @@ import styles from './not-found.module.css';
 
 export const NotFound = (): React.JSX.Element => {
   return (
-    <div className={styles.not_found}>
+    <div className={`${styles.not_found} text text_type_main-default`}>
       <div>Такой страницы нет</div>
       <Link to="/">На главную</Link>
     </div>

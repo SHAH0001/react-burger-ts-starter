@@ -34,7 +34,14 @@ export const AppHeader = (): React.JSX.Element => {
             <Logo />
           </div>
         </NavLink>
-        <NavLink to="/profile" className={`${styles.link} ${styles.link_position_last}`}>
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.active_link} ${styles.link} ${styles.link_position_last}`
+              : `${styles.link} ${styles.link_position_last}`
+          }
+        >
           <ProfileIcon type="secondary" />
           <p className="text text_type_main-default ml-2">Личный кабинет</p>
         </NavLink>
