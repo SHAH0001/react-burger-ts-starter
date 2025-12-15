@@ -4,11 +4,54 @@ import {
   Logo,
   ProfileIcon,
 } from '@krgaa/react-developer-burger-ui-components';
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+
+import type { RootState } from '../../services/store';
+import type { TUser } from '@/utils/user';
 
 import styles from './app-header.module.css';
 
 export const AppHeader = (): React.JSX.Element => {
+  const user = useSelector<RootState, TUser>((state): TUser => state.user.user as TUser);
+  let showMenu;
+  if (user) {
+    showMenu = (
+      <NavLink
+        to="/profile"
+        className={({ isActive }) =>
+          isActive
+            ? `${styles.active_link} ${styles.link} ${styles.link_position_last}`
+            : `${styles.link} ${styles.link_position_last}`
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
+            <p className="text text_type_main-default ml-2">{user.name}</p>
+          </>
+        )}
+      </NavLink>
+    );
+  } else {
+    showMenu = (
+      <NavLink
+        to="/login"
+        className={({ isActive }) =>
+          isActive
+            ? `${styles.active_link} ${styles.link} ${styles.link_position_last}`
+            : `${styles.link} ${styles.link_position_last}`
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
+            <p className="text text_type_main-default ml-2">Войти</p>
+          </>
+        )}
+      </NavLink>
+    );
+  }
   return (
     <header className={styles.header}>
       <nav className={`${styles.menu} p-4`}>
@@ -48,21 +91,7 @@ export const AppHeader = (): React.JSX.Element => {
             <Logo />
           </div>
         </NavLink>
-        <NavLink
-          to="/profile"
-          className={({ isActive }) =>
-            isActive
-              ? `${styles.active_link} ${styles.link} ${styles.link_position_last}`
-              : `${styles.link} ${styles.link_position_last}`
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
-              <p className="text text_type_main-default ml-2">Личный кабинет</p>
-            </>
-          )}
-        </NavLink>
+        {showMenu}
       </nav>
     </header>
   );

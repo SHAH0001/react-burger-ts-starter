@@ -1,6 +1,13 @@
 import { ProfileNav } from '@/components/profile-nav/profile-nav';
+import { fetchWithRefresh } from '@/utils/api';
+import { checkResponse } from '@/utils/checkResponse';
+import { serverUrl } from '@/utils/serverUrl';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+import type { RootState } from '@/services/store';
+import type { TUser } from '@/utils/user';
 
 import styles from './profile.module.css';
 
@@ -8,6 +15,42 @@ export const Profile = (): React.JSX.Element => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const user = useSelector<RootState, TUser>((state): TUser => state.user.user as TUser);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    setName(user.name);
+    setEmail(user.email);
+  }, []);
+
+  const isTouch = user.name !== name || user.email !== email || password.length > 0;
+
+  const cancel = (): void => {
+    setName(user.name);
+    setEmail(user.email);
+    setPassword('');
+  };
+
+  const editUser = async (): Promise<void> => {
+    return fetchWithRefresh(`${serverUrl}auth/user`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+      headers: {
+        authorization: localStorage.getItem('accessToken') ?? '',
+      },
+    })
+      .then(checkResponse)
+      .then((response) => {
+        console.log('response: ', response);
+      });
+  };
 
   return (
     <div className={styles.profile}>
@@ -39,10 +82,21 @@ export const Profile = (): React.JSX.Element => {
             value={password}
           />
           <div className={`${styles.controls} mt-6`}>
-            <Button htmlType="button" size="medium" type="secondary">
-              Отмена
-            </Button>
-            <Button htmlType="submit">Сохранить</Button>
+            {isTouch && (
+              <>
+                <Button
+                  onClick={cancel}
+                  htmlType="button"
+                  size="medium"
+                  type="secondary"
+                >
+                  Отмена
+                </Button>
+                <Button onClick={editUser} htmlType="submit">
+                  Сохранить
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

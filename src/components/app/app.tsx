@@ -80,8 +80,16 @@ export const App = (): React.JSX.Element => {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/ingredients/:id" element={<Ingredients />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/order-history" element={<OrderHistory />} />
+            <Route
+              path="/profile"
+              element={<ProtectedRoute onlyUnAuth={false} component={<Profile />} />}
+            />
+            <Route
+              path="/order-history"
+              element={
+                <ProtectedRoute onlyUnAuth={false} component={<OrderHistory />} />
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

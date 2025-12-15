@@ -53,7 +53,6 @@ export const getUser =
     })
       .then(checkResponse)
       .then((response) => {
-        console.log('response: ', response);
         dispatch({
           type: SET_USER,
           payload: response,
