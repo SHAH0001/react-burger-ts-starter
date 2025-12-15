@@ -6,7 +6,6 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { NavLink } from 'react-router-dom';
 
-// eslint-disable-next-line css-modules/no-unused-class
 import styles from './app-header.module.css';
 
 export const AppHeader = (): React.JSX.Element => {
@@ -21,12 +20,27 @@ export const AppHeader = (): React.JSX.Element => {
               isActive ? `${styles.active_link} ${styles.link}` : `${styles.link}`
             }
           >
-            <BurgerIcon type="primary" />
-            <p className="text text_type_main-default ml-2">Конструктор</p>
+            {({ isActive }) => (
+              <>
+                <BurgerIcon type={isActive ? 'primary' : 'secondary'} />
+                <p className="text text_type_main-default ml-2">Конструктор</p>
+              </>
+            )}
           </NavLink>
-          <NavLink to="/feed" className={`${styles.link} ml-10`}>
-            <ListIcon type="secondary" />
-            <p className="text text_type_main-default ml-2">Лента заказов</p>
+          <NavLink
+            to="/feed"
+            className={({ isActive }) =>
+              isActive
+                ? `${styles.active_link} ${styles.link} ml-10`
+                : `${styles.link} ml-10`
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <ListIcon type={isActive ? 'primary' : 'secondary'} />
+                <p className="text text_type_main-default ml-2">Лента заказов</p>
+              </>
+            )}
           </NavLink>
         </div>
         <NavLink to="/">
@@ -42,8 +56,12 @@ export const AppHeader = (): React.JSX.Element => {
               : `${styles.link} ${styles.link_position_last}`
           }
         >
-          <ProfileIcon type="secondary" />
-          <p className="text text_type_main-default ml-2">Личный кабинет</p>
+          {({ isActive }) => (
+            <>
+              <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
+              <p className="text text_type_main-default ml-2">Личный кабинет</p>
+            </>
+          )}
         </NavLink>
       </nav>
     </header>
