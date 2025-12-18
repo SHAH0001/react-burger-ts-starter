@@ -14,3 +14,7 @@ export type TIngredient = {
   count: number; // Добавляется в action
   key: string; // Добавляется в action
 };
+
+export type TLocationState = {
+  from?: Location;
+};

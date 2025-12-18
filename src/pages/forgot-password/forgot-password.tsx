@@ -1,13 +1,51 @@
+import { checkResponse } from '@/utils/checkResponse';
+import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Button } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+import type { TResetRequestPasswordResponse } from '@/services/types';
 
 import styles from './forgot-password.module.css';
 
 export const ForgotPassword = (): React.JSX.Element => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
+  const resetPasswordRequest = useCallback(async (): Promise<void> => {
+    try {
+      const response = await fetch(`${serverUrl}password-reset`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await checkResponse<TResetRequestPasswordResponse>(response);
+
+      if (!data.success) {
+        throw new Error('Request failed');
+      }
+
+      localStorage.setItem('resetPassword', 'true');
+      void navigate('/reset-password', { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(message);
+    }
+  }, [email, navigate]);
+
   return (
-    <div className={styles.forgot_password}>
+    <form
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        void resetPasswordRequest();
+      }}
+      className={styles.forgot_password}
+    >
       <div className="text text_type_main-large mb-6">Восстановление пароля</div>
       <EmailInput
         name="email"
@@ -17,12 +55,7 @@ export const ForgotPassword = (): React.JSX.Element => {
         disabled={false}
       />
       <div className="mt-6">
-        <Button
-          onClick={function fee() {}}
-          size="small"
-          type="primary"
-          htmlType={'button'}
-        >
+        <Button size="small" type="primary" htmlType={'submit'}>
           Восстановить
         </Button>
       </div>
@@ -34,7 +67,7 @@ export const ForgotPassword = (): React.JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

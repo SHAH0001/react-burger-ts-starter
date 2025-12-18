@@ -1,6 +1,7 @@
 import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 
+import type { TLoadingIngredientsResponse } from '../types';
 import type { TIngredient } from '@/utils/types';
 import type { Dispatch } from '@reduxjs/toolkit';
 
@@ -14,27 +15,34 @@ export const MODAL_INGREDIENT = 'MODAL_INGREDIENT';
 export const loadingIngredients =
   () =>
   async (dispatch: Dispatch): Promise<void> => {
-    return fetch(`${serverUrl}ingredients`)
-      .then(checkResponse)
-      .then(({ data }) => {
-        const payload = data.map((item: TIngredient) => {
-          return {
-            ...item,
-            count: 0,
-            key: '',
-          };
-        });
-        dispatch({
-          type: GET_INGREDIENTS,
-          payload,
-        });
-      })
-      .catch((error) => {
-        dispatch({
-          type: TASKS_ERROR,
-          payload: error.message,
-        });
+    try {
+      const response = await fetch(`${serverUrl}ingredients`);
+      const data = await checkResponse<TLoadingIngredientsResponse>(response);
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      const payload = data.data.map((item: TIngredient) => {
+        return {
+          ...item,
+          count: 0,
+          key: '',
+        };
       });
+
+      dispatch({
+        type: GET_INGREDIENTS,
+        payload,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+
+      dispatch({
+        type: TASKS_ERROR,
+        payload: message,
+      });
+    }
   };
 
 export const setBuns = (

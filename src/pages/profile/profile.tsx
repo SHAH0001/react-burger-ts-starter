@@ -1,12 +1,12 @@
 import { ProfileNav } from '@/components/profile-nav/profile-nav';
 import { fetchWithRefresh } from '@/utils/api';
-import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import type { RootState } from '@/services/store';
+import type { TUpdateUserResponse } from '@/services/types';
 import type { TUser } from '@/utils/user';
 
 import styles from './profile.module.css';
@@ -34,26 +34,38 @@ export const Profile = (): React.JSX.Element => {
     setPassword('');
   };
 
-  const editUser = async (): Promise<void> => {
-    return fetchWithRefresh(`${serverUrl}auth/user`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-      }),
-      headers: {
-        authorization: localStorage.getItem('accessToken') ?? '',
-      },
-    })
-      .then(checkResponse)
-      .then((response) => {
-        console.log('response: ', response);
+  const editUser = useCallback(async (): Promise<void> => {
+    try {
+      const data = await fetchWithRefresh<TUpdateUserResponse>(`${serverUrl}auth/user`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: localStorage.getItem('accessToken') ?? '',
+        },
       });
-  };
+
+      if (!data.success) {
+        throw new Error('Update failed');
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(message);
+    }
+  }, [email, password, name]);
 
   return (
-    <div className={styles.profile}>
+    <form
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        void editUser();
+      }}
+      className={styles.profile}
+    >
       <div className={styles.profile_wrapper}>
         <ProfileNav />
         <div className="ml-10">
@@ -92,15 +104,13 @@ export const Profile = (): React.JSX.Element => {
                 >
                   Отмена
                 </Button>
-                <Button onClick={editUser} htmlType="submit">
-                  Сохранить
-                </Button>
+                <Button htmlType="submit">Сохранить</Button>
               </>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

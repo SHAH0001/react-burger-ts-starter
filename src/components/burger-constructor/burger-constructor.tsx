@@ -18,6 +18,7 @@ import {
 import { useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Modal } from '../modal/modal';
@@ -30,6 +31,7 @@ import type { TIngredient } from '@utils/types';
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const bun = useSelector<RootState, TIngredient>(
@@ -104,6 +106,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
   };
 
   const openOrderModal = (): void => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      void navigate('login');
+      return;
+    }
+
     const ingredientIdentifiers: string[] = [];
     burgerConstructor.forEach((item: TIngredient) => {
       ingredientIdentifiers.push(item._id);

@@ -1,15 +1,59 @@
+import { checkResponse } from '@/utils/checkResponse';
+import { serverUrl } from '@/utils/serverUrl';
 import { Input, Button } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
+import type { TResetPasswordResponse } from '@/services/types';
 
 import styles from './reset-password.module.css';
 
 export const ResetPassword = (): React.JSX.Element => {
   const [password, setPassword] = useState('');
   const [codeFromLetter, setCodeFromLetter] = useState('');
-  // code from the letter
+  const navigate = useNavigate();
+
+  const resetPassword = useCallback(async (): Promise<void> => {
+    try {
+      const response = await fetch(`${serverUrl}password-reset/reset`, {
+        method: 'POST',
+        body: JSON.stringify({
+          password,
+          token: codeFromLetter,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await checkResponse<TResetPasswordResponse>(response);
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      localStorage.removeItem('resetPassword');
+      void navigate('/login');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown message';
+      console.error(message);
+    }
+  }, [password, codeFromLetter, navigate]);
+
+  useEffect(() => {
+    if (!localStorage.getItem('resetPassword')) {
+      void navigate('/forgot-password', { replace: true });
+    }
+  }, [navigate]);
+
   return (
-    <div className={styles.reset_password}>
+    <form
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        void resetPassword();
+      }}
+      className={styles.reset_password}
+    >
       <div className="text text_type_main-large mb-6">Восстановление пароля</div>
       <Input
         icon="ShowIcon"
@@ -27,12 +71,7 @@ export const ResetPassword = (): React.JSX.Element => {
           value={codeFromLetter}
         />
       </div>
-      <Button
-        onClick={function fee() {}}
-        size="small"
-        type="primary"
-        htmlType={'button'}
-      >
+      <Button size="small" type="primary" htmlType={'submit'}>
         Восстановить
       </Button>
       <div className={styles.auth_reset}>
@@ -43,7 +82,7 @@ export const ResetPassword = (): React.JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

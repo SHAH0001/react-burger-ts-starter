@@ -2,43 +2,67 @@ import { setUser } from '@/services/user/actions';
 import { checkResponse } from '@/utils/checkResponse';
 import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import type { TLoginResponse } from '@/services/types';
+import type { TLocationState } from '@/utils/types';
 
 import styles from './login.module.css';
 
 export const Login = (): React.JSX.Element => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const state = location.state as TLocationState;
+  const from = state?.from?.pathname ?? '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const login = async (): Promise<void> => {
-    if (email.length === 0 || password.length === 0) {
+  const login = useCallback(async (): Promise<void> => {
+    if (!email || !password) {
       return;
     }
 
-    return fetch(`${serverUrl}auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(checkResponse)
-      .then((response) => {
-        dispatch(setUser(response.user));
-        localStorage.setItem('accessToken', response.accessToken);
-        localStorage.setItem('refreshToken', response.refreshToken);
+    try {
+      const response = await fetch(`${serverUrl}auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
-  };
+
+      const data = await checkResponse<TLoginResponse>(response);
+
+      if (!data.success) {
+        throw new Error('Login failed');
+      }
+
+      dispatch(setUser(data.user));
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      void navigate(from, { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(message);
+    }
+  }, [email, password, navigate]);
 
   return (
-    <div className={styles.login}>
+    <form
+      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        void login();
+      }}
+      className={styles.login}
+    >
       <div className="text text_type_main-large mb-6">Вход</div>
       <EmailInput
         name="email"
@@ -57,7 +81,7 @@ export const Login = (): React.JSX.Element => {
           value={password}
         />
       </div>
-      <Button onClick={login} size="small" type="primary" htmlType={'button'}>
+      <Button size="small" type="primary" htmlType={'submit'}>
         Войти
       </Button>
       <div className={styles.auth_reset}>
@@ -76,7 +100,7 @@ export const Login = (): React.JSX.Element => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

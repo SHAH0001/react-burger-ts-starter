@@ -1,8 +1,10 @@
 import { checkResponse } from './checkResponse';
 import { serverUrl } from './serverUrl';
 
-export const refreshToken = () => {
-  return fetch(`${serverUrl}auth/user`, {
+import type { TRefreshTokenResponse } from '@/services/types';
+
+export const refreshToken = async (): Promise<TRefreshTokenResponse> => {
+  const response = await fetch(`${serverUrl}auth/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -10,50 +12,46 @@ export const refreshToken = () => {
     body: JSON.stringify({
       token: localStorage.getItem('refreshToken'),
     }),
-  })
-    .then(checkResponse)
-    .then((refreshData) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (!refreshData.success) {
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-        return Promise.reject(refreshData);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      localStorage.setItem('refreshToken', refreshData.refreshToken);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-      localStorage.setItem('accessToken', refreshData.accessToken);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return refreshData;
-    });
+  });
+
+  const refreshData = await checkResponse<TRefreshTokenResponse>(response);
+
+  if (!refreshData.success) {
+    throw new Error('Refresh token failed');
+  }
+
+  localStorage.setItem('refreshToken', refreshData.refreshToken);
+  localStorage.setItem('accessToken', refreshData.accessToken);
+
+  return refreshData;
 };
 
-export const fetchWithRefresh = async (
+export const fetchWithRefresh = async <T>(
   url: string,
-  options: {
-    method: string;
-    headers: {
-      authorization: string;
-    };
-  }
-) => {
+  options: RequestInit
+): Promise<T> => {
   try {
-    const res = await fetch(url, options);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await checkResponse(res);
-  } catch (err) {
-    if (err instanceof Error) {
-      if (err.message === 'jwt expired') {
-        console.log('Error: ', err);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const refreshData = await refreshToken();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-        options.headers.authorization = refreshData.accessToken;
-        const res = await fetch(url, options);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return await checkResponse(res);
-      } else {
-        return Promise.reject(err);
+    const response = await fetch(url, options);
+    return await checkResponse<T>(response);
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === 'jwt expired') {
+      const refreshData = await refreshToken();
+
+      if (!refreshData.success) {
+        throw new Error('Refresh token failed');
       }
+
+      const headers = new Headers(options.headers);
+      headers.set('authorization', refreshData.accessToken);
+
+      const res = await fetch(url, {
+        ...options,
+        headers,
+      });
+
+      return await checkResponse<T>(res);
+    } else {
+      throw error instanceof Error ? error : new Error('Unknown error');
     }
   }
 };
