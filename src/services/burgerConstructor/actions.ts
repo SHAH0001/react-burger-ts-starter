@@ -12,6 +12,7 @@ export const MOVE_CARD = 'MOVE_CARD';
 export const ORDER_COST = 'ORDER_COST';
 export const GET_ORDER_NUMBER = 'GET_ORDER_NUMBER';
 export const ORDER_NUMBER_ERROR = 'ORDER_NUMBER_ERROR';
+export const IS_LOADING_PLACE_ORDER = 'IS_LOADING_PLACE_ORDER';
 
 export const attachBun = (
   bun: TIngredient
@@ -62,6 +63,10 @@ export const placeOrder =
   (identifiers: string[]) =>
   async (dispatch: Dispatch): Promise<void> => {
     try {
+      dispatch({
+        type: IS_LOADING_PLACE_ORDER,
+        payload: true,
+      });
       const data = await fetchWithRefresh<TOrderResponse>(`${serverUrl}orders`, {
         method: 'POST',
         body: JSON.stringify(identifiers),
@@ -85,6 +90,11 @@ export const placeOrder =
       dispatch({
         type: ORDER_NUMBER_ERROR,
         payload: message,
+      });
+    } finally {
+      dispatch({
+        type: IS_LOADING_PLACE_ORDER,
+        payload: false,
       });
     }
   };

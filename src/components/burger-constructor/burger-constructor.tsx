@@ -14,6 +14,7 @@ import {
   CurrencyIcon,
   LockIcon,
   Button,
+  Preloader,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { useDrop } from 'react-dnd';
@@ -44,6 +45,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const orderCost = useSelector<RootState, number>(
     (state): number => state.burgerConstructor.orderCost
+  );
+
+  const isLoadingPlaceOrder = useSelector<RootState, boolean>(
+    (state): boolean => state.burgerConstructor.isLoadingPlaceOrder as boolean
   );
 
   const [, dropRefBurgerConstructor] = useDrop(() => ({
@@ -220,7 +225,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
           </Button>
         </div>
       </section>
-      {isModalOpen && (
+      {isLoadingPlaceOrder && (
+        <Modal onclose={onclose}>
+          <Preloader />
+        </Modal>
+      )}
+      {isModalOpen && !isLoadingPlaceOrder && (
         <Modal onclose={onclose}>
           <OrderDetails />
         </Modal>
