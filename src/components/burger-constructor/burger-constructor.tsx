@@ -12,9 +12,10 @@ import {
 } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
-  LockIcon,
+  // LockIcon,
   Button,
   Preloader,
+  ConstructorElement,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { useDrop } from 'react-dnd';
@@ -159,13 +160,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
             ref={(el) => {
               dropRefUpBun(el);
             }}
-            className={`${styles.bun_top} mb-4 text text_type_main-small`}
+            className="mb-4 text text_type_main-small"
           >
-            <img src={bun.image_mobile} alt={bun.name} />
-            <div className="mr-5">{bun.name} (верх)</div>
-            <div className="mr-1">{bun.price}</div>
-            <CurrencyIcon type="primary" className="mr-5" />
-            <LockIcon type="secondary" />
+            <ConstructorElement
+              price={bun.price}
+              text={bun.name}
+              thumbnail={bun.image_mobile}
+              isLocked
+              type="top"
+            />
           </div>
         ) : (
           <div
@@ -191,13 +194,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
             ref={(el) => {
               dropRefDownBun(el);
             }}
-            className={`${styles.bun_bottom} mt-4 text text_type_main-small`}
+            className="mt-4 text text_type_main-small"
           >
-            <img src={bun.image_mobile} alt={bun.name} />
-            <div className="mr-5">{bun.name} (низ)</div>
-            <div className="mr-1">{bun.price}</div>
-            <CurrencyIcon type="primary" className="mr-5" />
-            <LockIcon type="secondary" />
+            <ConstructorElement
+              price={bun.price}
+              text={bun.name}
+              thumbnail={bun.image_mobile}
+              isLocked
+              type="bottom"
+            />
           </div>
         ) : (
           <div
