@@ -46,7 +46,7 @@ export const AppHeader = (): React.JSX.Element => {
         {({ isActive }) => (
           <>
             <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
-            <p className="text text_type_main-default ml-2">Войти</p>
+            <p className="text text_type_main-default ml-2">Личный кабинет</p>
           </>
         )}
       </NavLink>

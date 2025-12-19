@@ -67,12 +67,12 @@ export const ProfileNav = (): React.JSX.Element => {
       >
         История заказов
       </NavLink>
-      <div
+      <button
         onClick={() => void localLogout()}
-        className={`${styles.link} text text_type_main-default`}
+        className={`${styles.link} ${styles.button} text text_type_main-default`}
       >
         Выход
-      </div>
+      </button>
     </nav>
   );
 };
