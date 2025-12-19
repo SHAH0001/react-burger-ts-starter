@@ -12,7 +12,6 @@ import {
 } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
-  // LockIcon,
   Button,
   Preloader,
   ConstructorElement,
