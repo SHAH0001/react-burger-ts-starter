@@ -1,10 +1,5 @@
 import { moveCard } from '@/services/burgerConstructor/actions';
-import {
-  ConstructorElement,
-  // CurrencyIcon,
-  // DeleteIcon,
-  // DragIcon,
-} from '@krgaa/react-developer-burger-ui-components';
+import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useDispatch } from 'react-redux';
