@@ -14,6 +14,7 @@ import { checkResponse } from '@/utils/checkResponse';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import type { TLocationState } from '@/utils/types';
+import { useDispatch } from 'react-redux';
 // import { useDispatch } from 'react-redux';
 // import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -27,7 +28,7 @@ import type { TLocationState } from '@/utils/types';
 const navigate = useNavigate();
 // eslint-disable-next-line react-hooks/rules-of-hooks
 const location = useLocation();
-
+const dispatch = useDispatch();
 const state = location.state as TLocationState;
 const from = state?.from?.pathname ?? '/';
 
@@ -113,7 +114,7 @@ export const login = async (email: string, password: string): Promise<void> => {
       throw new Error('Login failed');
     }
 
-    setUser(data.user);
+    dispatch(setUser(data.user));
     localStorage.setItem('accessToken', data.accessToken);
     localStorage.setItem('refreshToken', data.refreshToken);
     void navigate(from, { replace: true });
