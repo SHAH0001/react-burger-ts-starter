@@ -1,65 +1,69 @@
-import { setUser } from '@/services/user/actions';
-import { checkResponse } from '@/utils/checkResponse';
-import { serverUrl } from '@/utils/serverUrl';
+import { login } from '@/services/user/actions';
+// import { setUser } from '@/services/user/actions';
+// import { checkResponse } from '@/utils/checkResponse';
+// import { serverUrl } from '@/utils/serverUrl';
 import { EmailInput, Input, Button } from '@krgaa/react-developer-burger-ui-components';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import type { TLoginResponse } from '@/services/types';
-import type { TLocationState } from '@/utils/types';
-
+// import type { TLoginResponse } from '@/services/types';
+// import type { TLocationState } from '@/utils/types';
 import styles from './login.module.css';
 
 export const Login = (): React.JSX.Element => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const dispatch = useDispatch();
 
-  const state = location.state as TLocationState;
-  const from = state?.from?.pathname ?? '/';
+  // const from = state?.from?.pathname ?? '/';
+
+  // const navigate = useNavigate();
+  // const location = useLocation();
+
+  // const state = location.state as TLocationState;
+  // const from = state?.from?.pathname ?? '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const localLogin = (): void => {
+    void login(email, password);
+  };
+  // const login = useCallback(async (): Promise<void> => {
+  //   if (!email || !password) {
+  //     return;
+  //   }
 
-  const login = useCallback(async (): Promise<void> => {
-    if (!email || !password) {
-      return;
-    }
+  //   try {
+  //     const response = await fetch(`${serverUrl}auth/login`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email,
+  //         password,
+  //       }),
+  //     });
 
-    try {
-      const response = await fetch(`${serverUrl}auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+  //     const data = await checkResponse<TLoginResponse>(response);
 
-      const data = await checkResponse<TLoginResponse>(response);
+  //     if (!data.success) {
+  //       throw new Error('Login failed');
+  //     }
 
-      if (!data.success) {
-        throw new Error('Login failed');
-      }
-
-      dispatch(setUser(data.user));
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      void navigate(from, { replace: true });
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error(message);
-    }
-  }, [email, password, navigate]);
+  //     dispatch(setUser(data.user));
+  //     localStorage.setItem('accessToken', data.accessToken);
+  //     localStorage.setItem('refreshToken', data.refreshToken);
+  //     void navigate(from, { replace: true });
+  //   } catch (error: unknown) {
+  //     const message = error instanceof Error ? error.message : 'Unknown error';
+  //     console.error(message);
+  //   }
+  // }, [email, password, navigate]);
 
   return (
     <form
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        void login();
+        void localLogin();
       }}
       className={styles.login}
     >
