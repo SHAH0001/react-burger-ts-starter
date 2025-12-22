@@ -9,26 +9,14 @@ export const SET_USER = 'SET_USER';
 export const SET_AUTH_CHECKED = 'SET_AUTH_CHECKED';
 export const SET_IS_AUTH_CHECKED = 'SET_IS_AUTH_CHECKED';
 export const LOGOUT = 'LOGOUT';
-// import { setUser } from '@/services/user/actions';
 import { checkResponse } from '@/utils/checkResponse';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import type { TLocationState } from '@/utils/types';
-import { useDispatch } from 'react-redux';
-// import { useDispatch } from 'react-redux';
-// import { useLocation, useNavigate } from 'react-router-dom';
-
-// import type { TLocationState } from '@/utils/types';
-// import { useLocation } from 'react-router-dom';
-
-// import type { TLocationState } from '@/utils/types';
-
-// const dispatch = useDispatch();
 // eslint-disable-next-line react-hooks/rules-of-hooks
 const navigate = useNavigate();
 // eslint-disable-next-line react-hooks/rules-of-hooks
 const location = useLocation();
-const dispatch = useDispatch();
 const state = location.state as TLocationState;
 const from = state?.from?.pathname ?? '/';
 
@@ -91,35 +79,40 @@ export const getUser =
     }
   };
 
-export const login = async (email: string, password: string): Promise<void> => {
-  if (!email || !password) {
-    return;
-  }
-
-  try {
-    const response = await fetch(`${serverUrl}auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-
-    const data = await checkResponse<TLoginResponse>(response);
-
-    if (!data.success) {
-      throw new Error('Login failed');
+export const login =
+  (email: string, password: string) =>
+  async (dispatch: Dispatch): Promise<void> => {
+    if (!email || !password) {
+      return;
     }
 
-    dispatch(setUser(data.user));
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
-    void navigate(from, { replace: true });
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error(message);
-  }
-};
+    try {
+      const response = await fetch(`${serverUrl}auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await checkResponse<TLoginResponse>(response);
+
+      if (!data.success) {
+        throw new Error('Login failed');
+      }
+
+      dispatch({
+        type: SET_USER,
+        payload: data.user,
+      });
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
+      void navigate(from, { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      console.error(message);
+    }
+  };
