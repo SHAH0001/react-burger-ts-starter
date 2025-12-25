@@ -1,7 +1,7 @@
 import { fetchWithRefresh } from '@/utils/api';
 import { serverUrl } from '@/utils/serverUrl';
 
-import type { UserResponse, TLoginResponse } from '../types';
+import type { UserResponse } from '../types';
 import type { TUser } from '@/utils/user';
 import type { Dispatch } from '@reduxjs/toolkit';
 
@@ -9,16 +9,6 @@ export const SET_USER = 'SET_USER';
 export const SET_AUTH_CHECKED = 'SET_AUTH_CHECKED';
 export const SET_IS_AUTH_CHECKED = 'SET_IS_AUTH_CHECKED';
 export const LOGOUT = 'LOGOUT';
-import { checkResponse } from '@/utils/checkResponse';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import type { TLocationState } from '@/utils/types';
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const navigate = useNavigate();
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const location = useLocation();
-const state = location.state as TLocationState;
-const from = state?.from?.pathname ?? '/';
 
 export const setUser = (
   user: TUser
@@ -73,44 +63,6 @@ export const getUser =
         type: SET_USER,
         payload: data.user,
       });
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      console.error(message);
-    }
-  };
-
-export const login =
-  (email: string, password: string) =>
-  async (dispatch: Dispatch): Promise<void> => {
-    if (!email || !password) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`${serverUrl}auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await checkResponse<TLoginResponse>(response);
-
-      if (!data.success) {
-        throw new Error('Login failed');
-      }
-
-      dispatch({
-        type: SET_USER,
-        payload: data.user,
-      });
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
-      void navigate(from, { replace: true });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       console.error(message);
