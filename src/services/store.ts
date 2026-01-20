@@ -4,11 +4,13 @@ import { thunk } from 'redux-thunk';
 
 import { constructorReducer } from './burgerConstructor/reducer';
 import { ingredientsReducer } from './ingredients/reducer';
+import { userReducer } from './user/reducer';
 
 import type { Store, UnknownAction } from '@reduxjs/toolkit';
 const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   burgerConstructor: constructorReducer,
+  user: userReducer,
 });
 
 export const configureStore = (

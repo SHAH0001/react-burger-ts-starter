@@ -6,6 +6,7 @@ import {
   ORDER_COST,
   GET_ORDER_NUMBER,
   ORDER_NUMBER_ERROR,
+  IS_LOADING_PLACE_ORDER,
 } from './actions';
 
 import type { TIngredient } from '@/utils/types';
@@ -17,12 +18,14 @@ const initialState: {
   orderCost: number;
   orderNumber: number;
   orderNumberError: string | null;
+  isLoadingPlaceOrder: boolean;
 } = {
   burgerConstructor: [],
   bun: null,
   orderCost: 0,
   orderNumber: 0,
   orderNumberError: null,
+  isLoadingPlaceOrder: false,
 };
 
 export const constructorReducer = (
@@ -79,6 +82,8 @@ export const constructorReducer = (
     }
     case ORDER_NUMBER_ERROR:
       return { ...state, orderNumberError: action.payload };
+    case IS_LOADING_PLACE_ORDER:
+      return { ...state, isLoadingPlaceOrder: action.payload };
     default:
       return state;
   }

@@ -1,0 +1,16 @@
+.profile {
+  width: 1240px;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.profile_wrapper {
+  display: flex;
+  margin-top: 80px;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+}

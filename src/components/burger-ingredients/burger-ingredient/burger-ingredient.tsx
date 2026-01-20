@@ -1,5 +1,6 @@
 import { Counter, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
+import { Link, useLocation } from 'react-router-dom';
 
 import type { TIngredient } from '@utils/types';
 
@@ -21,22 +22,31 @@ export const BurgerIngredient = ({
       isDragStart: monitor.isDragging(),
     }),
   });
+  const location = useLocation();
 
   return (
-    <div
-      ref={(el) => {
-        dragRef(el);
-      }}
-      onClick={() => getIngredientId(ingredient._id)}
+    <Link
       className={`${styles.ingredient} mb-10`}
+      key={ingredient._id}
+      to={`/ingredients/${ingredient._id}`}
+      state={{ backgroundLocation: location }}
     >
-      {ingredient.count > 0 ? <Counter count={ingredient.count} size="default" /> : null}
-      <img src={ingredient.image} alt={ingredient.name} />
-      <div className={styles.price}>
-        {ingredient.price}
-        <CurrencyIcon type="primary" className="ml-1" />
+      <div
+        ref={(el) => {
+          dragRef(el);
+        }}
+        onClick={() => getIngredientId(ingredient._id)}
+      >
+        {ingredient.count > 0 ? (
+          <Counter count={ingredient.count} size="default" />
+        ) : null}
+        <img src={ingredient.image} alt={ingredient.name} />
+        <div className={styles.price}>
+          {ingredient.price}
+          <CurrencyIcon type="primary" className="ml-1" />
+        </div>
+        <div className={styles.name}>{ingredient.name}</div>
       </div>
-      <div className={styles.name}>{ingredient.name}</div>
-    </div>
+    </Link>
   );
 };

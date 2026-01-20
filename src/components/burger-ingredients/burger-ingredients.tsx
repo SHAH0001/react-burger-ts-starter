@@ -1,25 +1,21 @@
 import { modalIngredient } from '@/services/ingredients/actions';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { IngredientDetails } from '../ingredient-details/ingredient-details';
-import { Modal } from '../modal/modal';
 import { BurgerIngredient } from './burger-ingredient/burger-ingredient';
 
+import type { RootState } from '../../services/store';
 import type { TIngredient } from '@utils/types';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
+export const BurgerIngredients = (): React.JSX.Element => {
+  const ingredients = useSelector<RootState, TIngredient[]>(
+    (state): TIngredient[] => state.ingredients.ingredients as TIngredient[]
+  );
 
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
   const dispatch = useDispatch();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState('bun');
 
   const containerRef = useRef(null);
@@ -36,12 +32,7 @@ export const BurgerIngredients = ({
     if (!findIngredient) {
       return;
     }
-    setIsModalOpen(true);
     dispatch(modalIngredient(findIngredient));
-  };
-
-  const onclose = (): void => {
-    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -173,11 +164,6 @@ export const BurgerIngredients = ({
           </div>
         </div>
       </section>
-      {isModalOpen && (
-        <Modal title={'Детали ингредиента'} onclose={onclose}>
-          <IngredientDetails />
-        </Modal>
-      )}
     </>
   );
 };

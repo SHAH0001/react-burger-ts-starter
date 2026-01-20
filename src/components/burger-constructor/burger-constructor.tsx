@@ -12,12 +12,14 @@ import {
 } from '@/services/ingredients/actions';
 import {
   CurrencyIcon,
-  LockIcon,
   Button,
+  Preloader,
+  ConstructorElement,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Modal } from '../modal/modal';
@@ -30,6 +32,7 @@ import type { TIngredient } from '@utils/types';
 import styles from './burger-constructor.module.css';
 
 export const BurgerConstructor = (): React.JSX.Element => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const bun = useSelector<RootState, TIngredient>(
@@ -42,6 +45,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   const orderCost = useSelector<RootState, number>(
     (state): number => state.burgerConstructor.orderCost
+  );
+
+  const isLoadingPlaceOrder = useSelector<RootState, boolean>(
+    (state): boolean => state.burgerConstructor.isLoadingPlaceOrder as boolean
   );
 
   const [, dropRefBurgerConstructor] = useDrop(() => ({
@@ -104,6 +111,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
   };
 
   const openOrderModal = (): void => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      void navigate('login');
+      return;
+    }
+
     const ingredientIdentifiers: string[] = [];
     burgerConstructor.forEach((item: TIngredient) => {
       ingredientIdentifiers.push(item._id);
@@ -146,13 +159,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
             ref={(el) => {
               dropRefUpBun(el);
             }}
-            className={`${styles.bun_top} mb-4 text text_type_main-small`}
+            className="mb-4 text text_type_main-small"
           >
-            <img src={bun.image_mobile} alt={bun.name} />
-            <div className="mr-5">{bun.name} (верх)</div>
-            <div className="mr-1">{bun.price}</div>
-            <CurrencyIcon type="primary" className="mr-5" />
-            <LockIcon type="secondary" />
+            <ConstructorElement
+              price={bun.price}
+              text={bun.name}
+              thumbnail={bun.image_mobile}
+              isLocked
+              type="top"
+            />
           </div>
         ) : (
           <div
@@ -178,13 +193,15 @@ export const BurgerConstructor = (): React.JSX.Element => {
             ref={(el) => {
               dropRefDownBun(el);
             }}
-            className={`${styles.bun_bottom} mt-4 text text_type_main-small`}
+            className="mt-4 text text_type_main-small"
           >
-            <img src={bun.image_mobile} alt={bun.name} />
-            <div className="mr-5">{bun.name} (низ)</div>
-            <div className="mr-1">{bun.price}</div>
-            <CurrencyIcon type="primary" className="mr-5" />
-            <LockIcon type="secondary" />
+            <ConstructorElement
+              price={bun.price}
+              text={bun.name}
+              thumbnail={bun.image_mobile}
+              isLocked
+              type="bottom"
+            />
           </div>
         ) : (
           <div
@@ -212,7 +229,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
           </Button>
         </div>
       </section>
-      {isModalOpen && (
+      {isLoadingPlaceOrder && (
+        <Modal onclose={onclose}>
+          <Preloader />
+        </Modal>
+      )}
+      {isModalOpen && !isLoadingPlaceOrder && (
         <Modal onclose={onclose}>
           <OrderDetails />
         </Modal>

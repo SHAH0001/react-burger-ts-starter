@@ -1,0 +1,16 @@
+.link {
+  display: flex;
+  color: var(--text-inactive-color);
+  text-decoration: none;
+  font-size: 40px;
+}
+
+.active_link {
+  color: white;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
